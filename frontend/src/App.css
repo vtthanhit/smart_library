@@ -1,0 +1,22 @@
+@tailwind base;
+
+@layer base {
+  body {
+    @apply font-publicSans text-body-color;
+  }
+  a {
+    @apply text-primary;
+  }
+  h4 {
+    @apply text-2xl;
+  }
+  p {
+    @apply mt-0;
+  }
+  label {
+    @apply inline-block;
+  }
+  ul {
+    @apply mt-0;
+  }
+}
