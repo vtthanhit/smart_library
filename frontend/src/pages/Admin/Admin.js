@@ -1,11 +1,19 @@
-import React from 'react'
-import Categories from '../../components/layout/category/Categories';
-import Header from '../../components/layout/header';
-import Menu from '../../components/layout/menu';
-import AddCategory from './../../components/layout/category/AddCategory';
+import React, { useContext } from 'react'
+import { Snackbar, Alert } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
-function Admin({ adminRoute }) {
+import Header from '../../components/layout/header';
+import Menu from '../../components/layout/menu';
+import { CategoryContext } from '../../contexts/CategoryContext';
+
+function Admin() {
+  // const { showToast: { open, message, type },
+  //   setShowToast,
+  // } = useContext(CategoryContext);
+
+  // const handleClose = () => {
+  //   setShowToast({ open: false, message: '', type: null });
+  // }
   return (
     <div className='w-full flex flex-auto items-stretch bg-root-bg'>
       <div className='w-full flex flex-auto items-stretch min-h-screen'>
@@ -15,9 +23,14 @@ function Admin({ adminRoute }) {
         <div className='xl:pl-64 flex flex-auto items-stretch p-0 basis-full flex-col w-0 min-w-0 min-h-0'>
           {/* Search */}
           <Header />
-          <Outlet /> 
+          <Outlet />
         </div>
       </div>
+      {/* <Snackbar open={open} onClose={handleClose} anchorOrigin={{horizontal: 'right', vertical: 'top'}}>\
+        <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>
+          { message }
+        </Alert>
+      </Snackbar> */}
     </div>
   )
 }

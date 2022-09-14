@@ -8,23 +8,26 @@ import Admin from './pages/Admin/Admin';
 import PrivateRoutes from './components/routing/PrivateRoute';
 import Categories from './components/layout/category/Categories';
 import AddCategory from './components/layout/category/AddCategory';
+import CategoryContextProvider from './contexts/CategoryContext';
 
 function App() {
   return (
   <AuthContextProvider>
-    <Router>
-      <Routes>
-        <Route path='/' element={<Landing/>} />
-        <Route path='/login' element={<Login/>} />
-        <Route element={<PrivateRoutes/>} >
-          <Route path='/index' element={<Home/>} />
-          <Route path='/admin' element={<Admin/>}>
-            <Route path='category' element={<Categories />} /> 
-            <Route path='category/add' element={<AddCategory />} /> 
+    <CategoryContextProvider>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Landing/>} />
+          <Route path='/login' element={<Login/>} />
+          <Route element={<PrivateRoutes/>} >
+            <Route path='/index' element={<Home/>} />
+            <Route path='/admin' element={<Admin/>}>
+              <Route path='category' element={<Categories />} />
+              <Route path='category/add' element={<AddCategory />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </CategoryContextProvider>
   </AuthContextProvider>
   )
 }

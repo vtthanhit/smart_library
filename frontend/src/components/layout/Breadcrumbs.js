@@ -17,9 +17,9 @@ const Breadcrumbs = props => {
       {pathnames.map((name, index) => {
         const RouteTo = `/${pathnames.slice(0, index + 1).join('/')}`;
         return index === pathnames.length - 1 ? (
-          <Typography className='font-bold xl:text-xl'>{name}</Typography>
+          <Typography key={index} className='font-bold xl:text-xl'>{name}</Typography>
         ) : (
-          <Link onClick={() => navigate(RouteTo)}>{name}</Link>
+          <Link key={index} onClick={() => navigate(RouteTo)}>{name}</Link>
         )
       })}
     </MUIBreadcrumbs>
