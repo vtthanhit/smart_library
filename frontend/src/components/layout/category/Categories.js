@@ -20,7 +20,6 @@ function Categories() {
         <div className='flex justify-between items-center'>
           <Breadcrumbs />
           <AddCategoryModal />
-          <ToastMessage />
         </div>
       </div>
       {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

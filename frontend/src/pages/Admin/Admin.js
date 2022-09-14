@@ -5,6 +5,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../../components/layout/header';
 import Menu from '../../components/layout/menu';
 import { CategoryContext } from '../../contexts/CategoryContext';
+import ToastMessage from './../../components/layout/ToastMessage';
 
 function Admin() {
   // const { showToast: { open, message, type },
@@ -26,6 +27,8 @@ function Admin() {
           <Outlet />
         </div>
       </div>
+      <ToastMessage />
+
       {/* <Snackbar open={open} onClose={handleClose} anchorOrigin={{horizontal: 'right', vertical: 'top'}}>\
         <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }}>
           { message }
