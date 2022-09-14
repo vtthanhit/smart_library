@@ -6,6 +6,8 @@ import AuthContextProvider from './contexts/AuthContext';
 import Home from './pages/Home/Home';
 import Admin from './pages/Admin/Admin';
 import PrivateRoutes from './components/routing/PrivateRoute';
+import Categories from './components/layout/category/Categories';
+import AddCategory from './components/layout/category/AddCategory';
 
 function App() {
   return (
@@ -16,9 +18,10 @@ function App() {
         <Route path='/login' element={<Login/>} />
         <Route element={<PrivateRoutes/>} >
           <Route path='/index' element={<Home/>} />
-          <Route path='/admin' element={<Admin/>} />
-          <Route exact path='admin/category/list' element={<Admin adminRoute='/admin/category/list' />} /> 
-          <Route exact path='admin/category/add' element={<Admin adminRoute='/admin/category/add' />} /> 
+          <Route path='/admin' element={<Admin/>}>
+            <Route path='category' element={<Categories />} /> 
+            <Route path='category/add' element={<AddCategory />} /> 
+          </Route>
         </Route>
       </Routes>
     </Router>

@@ -11,6 +11,7 @@ module.exports = {
 			},
 			maxWidth: {
         '400': '400px',
+        '1400': '1400px',
         'calc-xxl': 'calc(1440px - calc(1.625rem * 2))',
       },
       minHeight: {
@@ -58,7 +59,9 @@ module.exports = {
       },
 		},
     screens: {
+      'xs': '992px',
       'xl': '1200px',
+      'xxl': '1400px',
     }
   },
   plugins: [

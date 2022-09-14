@@ -67,7 +67,7 @@ export const menuData = [
     subMenu: [
       {
         title: 'Danh sách danh mục',
-        path: '/admin/category/list',
+        path: '/admin/category',
         icon: <AssignmentOutlinedIcon fontSize='small' />,
       },
       {
