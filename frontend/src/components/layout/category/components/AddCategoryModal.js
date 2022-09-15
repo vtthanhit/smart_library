@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,8 +12,10 @@ const AddCategoryModal = (props) => {
   const handleClose = () => setOpen(false);
 
   const {
+    categoryState: { category, categories, categoriesLoading },
 		addCategory,
 		setShowToast,
+    getCategories,
 	} = useContext(CategoryContext)
 
   const [newCategory, setNewCategory] = useState({
@@ -27,8 +29,8 @@ const AddCategoryModal = (props) => {
   const onSubmit = async event => {
     event.preventDefault();
     const { success, message } = await addCategory(newCategory);
-    await resetAddCategoryData();
-    await setShowToast({ open: true, message, type: success ? 'success' : 'error' })
+    resetAddCategoryData();
+    setShowToast({ open: true, message, type: success ? 'success' : 'error' });
   }
 
   const resetAddCategoryData = () => {

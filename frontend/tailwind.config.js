@@ -10,6 +10,7 @@ module.exports = {
 				publicSans: ['"Public Sans"', 'sans-serif']
 			},
 			maxWidth: {
+        '100': '100px',
         '400': '400px',
         '1400': '1400px',
         'calc-xxl': 'calc(1440px - calc(1.625rem * 2))',
@@ -37,7 +38,7 @@ module.exports = {
         'border-color': '#d9dee3',
         'form': '#566a7f',
         'root-bg': '#f5f5f9',
-        'body-color': '#697a8d'
+        'body-color': '#697a8d',
       },
       backgroundColor: {
         'primary-impo': '#696cff !important',
@@ -66,7 +67,7 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/forms')({
-      strategy: 'class', 
+      strategy: 'class',
     }),
   ],
 }

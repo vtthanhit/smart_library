@@ -1,7 +1,7 @@
 import { createContext, useReducer, useEffect } from 'react';
-import { authReducer } from '../reducers/authReducer';
-import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from './constants';
 import axios from 'axios';
+import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from './constants';
+import { authReducer } from '../reducers/authReducer';
 import setAuthToken from '../utils/setAuthToken';
 
 export const AuthContext = createContext();
@@ -42,10 +42,9 @@ const AuthContextProvider = ({ children }) => {
 		}
 	}
 
-	useEffect(() => { 
+	useEffect(() => {
 		loadUser();
 		return () => {
-			console.log('This will be logged on unmount');
 		};
 	}, []);
 

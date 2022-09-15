@@ -7,7 +7,6 @@ import Home from './pages/Home/Home';
 import Admin from './pages/Admin/Admin';
 import PrivateRoutes from './components/routing/PrivateRoute';
 import Categories from './components/layout/category/Categories';
-import AddCategory from './components/layout/category/AddCategory';
 import CategoryContextProvider from './contexts/CategoryContext';
 
 function App() {
@@ -22,7 +21,6 @@ function App() {
             <Route path='/index' element={<Home/>} />
             <Route path='/admin' element={<Admin/>}>
               <Route path='category' element={<Categories />} />
-              <Route path='category/add' element={<AddCategory />} />
             </Route>
           </Route>
         </Routes>

@@ -70,11 +70,6 @@ export const menuData = [
         path: '/admin/category',
         icon: <AssignmentOutlinedIcon fontSize='small' />,
       },
-      {
-        title: 'Thêm danh mục',
-        path: '/admin/category/add',
-        icon: <AssignmentReturnedOutlinedIcon fontSize='small' />,
-      },
     ]
   },
   {

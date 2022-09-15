@@ -1,6 +1,7 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import Loading from '../layout/Loading';
 
 const PrivateRoutes = () => {
 	const {
@@ -9,7 +10,7 @@ const PrivateRoutes = () => {
 
 	if (authLoading)
 		return (
-			console.log('addasdsad')
+			<Loading />
 		)
 
 	return (

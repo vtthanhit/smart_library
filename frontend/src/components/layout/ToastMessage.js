@@ -1,4 +1,4 @@
-import React, { useContext, forwardRef, useState, useEffect } from 'react'
+import React, { useContext, forwardRef } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -9,14 +9,10 @@ const Alert = forwardRef(function Alert(props, ref) {
 });
 
 const ToastMessage = () => {
-  const { 
+  const {
     showToast: { open, message, type },
     setShowToast,
   } = useContext(CategoryContext);
-
-  // const [show, setShow] = useState(open);
-  console.log('open 1 ', open)
-  // console.log('show ', show)
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -27,8 +23,6 @@ const ToastMessage = () => {
       message: '',
       type: null
     });
-    console.log('open 2 ', open)
-    // setShow(false)
   };
 
 
