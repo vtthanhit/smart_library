@@ -1,7 +1,7 @@
 import { createContext, useReducer, useState } from 'react';
 import axios from 'axios';
 
-import { apiUrl } from './constants';
+import { apiUrl, PAGY_PAGE_SIZE } from './constants';
 import {
 	ADD_CATEGORY,
 	CATEGORIES_LOADED_SUCCESS,
@@ -14,6 +14,7 @@ export const CategoryContext = createContext();
 
 const CategoryContextProvider = ({ children }) => {
   const [categoryState, dispatch] = useReducer(categoryReducer, {
+		count: 0,
 		category: null,
 		categories: [],
 		categoriesLoading: true
@@ -25,12 +26,21 @@ const CategoryContextProvider = ({ children }) => {
 		type: null
 	});
 
+	const [pagination, setPagination] = useState({
+    count: 0,
+    from: 0,
+    to: PAGY_PAGE_SIZE,
+  });
+
 	// Get all category
-	const getCategories = async () => {
+	const getCategories = async (from, to) => {
 		try {
 			const response = await axios.get(`${apiUrl}/category`);
 			if (response.data.success) {
-				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: response.data.categories })
+				const data = response.data.categories
+				const count = data.length;
+				const categories = data.slice(from, to);
+				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: { count, categories } })
 			}
 		} catch (error) {
 			dispatch({ type: CATEGORIES_LOADED_FAIL })
@@ -42,7 +52,7 @@ const CategoryContextProvider = ({ children }) => {
 		try {
 			const response = await axios.post(`${apiUrl}/category`, newCategory)
 			if (response.data.success) {
-				dispatch({ type: ADD_CATEGORY, payload: response.data.post })
+				dispatch({ type: ADD_CATEGORY, payload: response.data.category })
 				return response.data
 			}
 		} catch (error) {
@@ -70,6 +80,8 @@ const CategoryContextProvider = ({ children }) => {
 		showToast,
 		setShowToast,
 		deleteCategory,
+		pagination,
+		setPagination,
 	}
 
   return (

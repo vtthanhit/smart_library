@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
@@ -6,24 +6,35 @@ import Pagination from '@mui/material/Pagination';
 
 import Loading from '../../Loading';
 import { CategoryContext } from '../../../../contexts/CategoryContext';
+import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
 
 const ListCategories = () => {
   const {
-    categoryState: { category, categories, categoriesLoading },
+    categoryState: { category, count, categories, categoriesLoading },
     getCategories,
     addCategory,
     deleteCategory,
+    pagination,
+    setPagination,
   } = useContext(CategoryContext);
 
   useEffect(() => {
-		getCategories();
-	}, []);
+    getCategories(pagination.from, pagination.to);
+    setPagination({...pagination, count});
+    console.log(pagination)
+	}, [pagination.from, pagination.to]);
+  
+  const handlePaginateChange = (event, page) => {
+    const from = (page - 1) * PAGY_PAGE_SIZE;
+    const to = (page - 1) * PAGY_PAGE_SIZE + PAGY_PAGE_SIZE;
+
+    setPagination({ ...pagination, from, to });
+  }
+  console.log(pagination)
 
   if (categoriesLoading) {
     return <Loading />
   }
-
-  console.log(categories);
 
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
@@ -61,7 +72,12 @@ const ListCategories = () => {
               }
             </tbody>
           </table>
-          <Pagination className='pt-3' count={10} color="primary" />
+          <Pagination 
+            className='pt-3' 
+            count={Math.ceil(count / PAGY_PAGE_SIZE)} 
+            color="primary" 
+            onChange={handlePaginateChange}
+          />
         </div>
       </div>
     </div>

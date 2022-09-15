@@ -25,7 +25,7 @@ function MenuItem({ item }) {
     {submenu &&
       item.subMenu.map((item, index) => {
         return (
-            <li className='flex-auto flex-col m-0 p-0 list-none items-start justify-start '>
+            <li key={index} className='flex-auto flex-col m-0 p-0 list-none items-start justify-start '>
               <NavLink to={item.path} key={index} className='rounded-md my-0.5 mx-4 text-base py-3 px-6 relative flex items-center flex-grow-0 flex-shrink-1 basis-auto text-body-color hover:text-primary hover:font-bold hover:bg-nav-hover transition-colors duration-300'>
                 <div className='mr-2'>{item.icon}</div>
                 <div>{item.title}</div>

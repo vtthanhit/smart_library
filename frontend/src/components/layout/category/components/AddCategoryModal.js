@@ -7,15 +7,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import { CategoryContext } from '../../../../contexts/CategoryContext';
 
 const AddCategoryModal = (props) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const {
-    categoryState: { category, categories, categoriesLoading },
+    categoryState: { category, count, categories, categoriesLoading },
 		addCategory,
 		setShowToast,
     getCategories,
+    pagination,
+    setPagination,
 	} = useContext(CategoryContext)
 
   const [newCategory, setNewCategory] = useState({
@@ -29,12 +31,7 @@ const AddCategoryModal = (props) => {
   const onSubmit = async event => {
     event.preventDefault();
     const { success, message } = await addCategory(newCategory);
-    resetAddCategoryData();
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
-  }
-
-  const resetAddCategoryData = () => {
-    setNewCategory({ name: '' });
     handleClose();
   }
 
@@ -68,6 +65,7 @@ const AddCategoryModal = (props) => {
               id="outlined-basic"
               name='name'
               variant="outlined"
+              placeholder='Tên danh mục'
               fullWidth={true}
               size="small"
               required
