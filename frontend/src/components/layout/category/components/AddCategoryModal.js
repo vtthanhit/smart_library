@@ -12,7 +12,7 @@ const AddCategoryModal = (props) => {
   const handleClose = () => setOpen(false);
 
   const {
-    categoryState: { category, count, categories, categoriesLoading },
+    categoryState: { category, data, count, categories, categoriesLoading },
 		addCategory,
 		setShowToast,
     getCategories,
@@ -31,9 +31,18 @@ const AddCategoryModal = (props) => {
   const onSubmit = async event => {
     event.preventDefault();
     const { success, message } = await addCategory(newCategory);
+    if (success) {
+      getCategories(pagination.from, pagination.to)
+      setPagination({...pagination, count: count + 1});
+    }
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     handleClose();
   }
+  console.log(pagination);
+
+  // useEffect(() => {
+  //   setPagination({...pagination, count: count + 1})
+  // }, [])
 
   return (
     <div>

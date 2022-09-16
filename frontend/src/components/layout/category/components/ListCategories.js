@@ -21,16 +21,14 @@ const ListCategories = () => {
   useEffect(() => {
     getCategories(pagination.from, pagination.to);
     setPagination({...pagination, count});
-    console.log(pagination)
 	}, [pagination.from, pagination.to]);
-  
+
   const handlePaginateChange = (event, page) => {
     const from = (page - 1) * PAGY_PAGE_SIZE;
     const to = (page - 1) * PAGY_PAGE_SIZE + PAGY_PAGE_SIZE;
 
     setPagination({ ...pagination, from, to });
   }
-  console.log(pagination)
 
   if (categoriesLoading) {
     return <Loading />
@@ -72,10 +70,10 @@ const ListCategories = () => {
               }
             </tbody>
           </table>
-          <Pagination 
-            className='pt-3' 
-            count={Math.ceil(count / PAGY_PAGE_SIZE)} 
-            color="primary" 
+          <Pagination
+            className='pt-3'
+            count={Math.ceil(count / PAGY_PAGE_SIZE)}
+            color="primary"
             onChange={handlePaginateChange}
           />
         </div>
