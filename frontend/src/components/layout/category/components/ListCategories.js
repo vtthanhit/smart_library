@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
 
 import Loading from '../../Loading';
 import { CategoryContext } from '../../../../contexts/CategoryContext';
 import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
 
 const ListCategories = () => {
+  const location= useLocation();
+
   const {
     categoryState: { category, count, categories, categoriesLoading },
     getCategories,
@@ -21,16 +25,14 @@ const ListCategories = () => {
   useEffect(() => {
     getCategories(pagination.from, pagination.to);
     setPagination({...pagination, count});
-    console.log(pagination)
 	}, [pagination.from, pagination.to]);
-  
+
   const handlePaginateChange = (event, page) => {
     const from = (page - 1) * PAGY_PAGE_SIZE;
     const to = (page - 1) * PAGY_PAGE_SIZE + PAGY_PAGE_SIZE;
 
     setPagination({ ...pagination, from, to });
   }
-  console.log(pagination)
 
   if (categoriesLoading) {
     return <Loading />
@@ -72,11 +74,19 @@ const ListCategories = () => {
               }
             </tbody>
           </table>
-          <Pagination 
-            className='pt-3' 
-            count={Math.ceil(count / PAGY_PAGE_SIZE)} 
-            color="primary" 
+          <Pagination
+            className='pt-3'
+            count={Math.ceil(count / PAGY_PAGE_SIZE)}
+            color="primary"
             onChange={handlePaginateChange}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={`/admin/category${item.page === 1 ? '' : `?page=${item.page}`}`}
+                {...item}
+                />
+              )
+            }
           />
         </div>
       </div>
