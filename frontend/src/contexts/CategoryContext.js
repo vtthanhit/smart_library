@@ -68,8 +68,11 @@ const CategoryContextProvider = ({ children }) => {
 			const response = await axios.delete(`${apiUrl}/category/${categoryId}`)
 			if (response.data.success)
 				dispatch({ type: DELETE_CATEGORY, payload: categoryId })
+				return response.data
 		} catch (error) {
-			console.log(error)
+			return error.response.data
+				? error.response.data
+				: { success: false, message: 'Server error' }
 		}
 	}
 

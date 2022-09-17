@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { CategoryContext } from '../../../../contexts/CategoryContext';
 
-const AddCategoryModal = (props) => {
+const UpdateCategoryModal = (props) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,10 +41,7 @@ const AddCategoryModal = (props) => {
 
   return (
     <div>
-      <Button onClick={handleOpen} className='bg-primary' variant="contained" startIcon={<AddIcon />}>
-        Thêm mới
-      </Button>
-      <Dialog open={open} onClose={handleClose} fullWidth={true}>
+      <Dialog open={props.openUpdate} onClose={handleClose} fullWidth={true}>
         <form onSubmit={onSubmit}>
           <DialogTitle>
             Thêm mới danh mục
@@ -87,4 +84,4 @@ const AddCategoryModal = (props) => {
   )
 }
 
-export default AddCategoryModal
+export default UpdateCategoryModal
