@@ -1,10 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const multer  = require('multer');
+const fs = require('fs');
 const { verifyTokenAdmin } = require('../middleware/auth');
 
 const Book = require('../models/Book');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-router.post('/', verifyTokenAdmin, async (req, res) => {
+const upload = multer({ storage: storage });
+
+router.post('/', upload.single('image'), verifyTokenAdmin, async (req, res) => {
   const { name, author, description, quantity, category } = req.body;
 
   if(!name) return res.status(400).json({ success: false, message: 'Book name is require.' });
@@ -18,6 +30,10 @@ router.post('/', verifyTokenAdmin, async (req, res) => {
       description,
       quantity,
       category,
+      image: {
+        data: fs.readFileSync('uploads/' + req.file.filename),
+        contentType: 'image/png',
+      }
     });
     await newBook.save();
     return res.status(200).json({ success: true, message: 'Create new book successfully.', book: newBook });

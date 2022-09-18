@@ -4,12 +4,19 @@ import {
   CATEGORIES_LOADED_FAIL,
   DELETE_CATEGORY,
   UPDATE_CATEGORY,
+  ALL_CATEGORY,
 } from '../contexts/constants';
 
 export const categoryReducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case ALL_CATEGORY:
+      return {
+        ...state,
+        categories: payload.categories,
+      }
+
     case CATEGORIES_LOADED_SUCCESS:
       return {
         ...state,

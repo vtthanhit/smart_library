@@ -8,6 +8,7 @@ import {
 	CATEGORIES_LOADED_FAIL,
 	DELETE_CATEGORY,
 	UPDATE_CATEGORY,
+	ALL_CATEGORY,
 } from '../contexts/constants';
 import { categoryReducer } from '../reducers/categoryReducer';
 
@@ -15,7 +16,7 @@ export const CategoryContext = createContext();
 
 const CategoryContextProvider = ({ children }) => {
   const [categoryState, dispatch] = useReducer(categoryReducer, {
-		length: 0,
+		count: 0,
 		category: null,
 		categories: [],
 		categoriesLoading: true
@@ -33,7 +34,7 @@ const CategoryContextProvider = ({ children }) => {
     to: PAGY_PAGE_SIZE,
   });
 
-	// Get all category
+	// Get all category with paginate
 	const getCategories = async (from, to) => {
 		try {
 			const response = await axios.get(`${apiUrl}/category`);
@@ -42,6 +43,19 @@ const CategoryContextProvider = ({ children }) => {
 				const count = data.length;
 				const categories = data.slice(from, to);
 				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: { count, categories } })
+			}
+		} catch (error) {
+			dispatch({ type: CATEGORIES_LOADED_FAIL })
+		}
+	}
+
+	// Get all category
+	const getAllCategories = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/category`);
+			if (response.data.success) {
+				const categories = response.data.categories;
+				dispatch({ type: ALL_CATEGORY, payload: { categories } })
 			}
 		} catch (error) {
 			dispatch({ type: CATEGORIES_LOADED_FAIL })
@@ -95,6 +109,7 @@ const CategoryContextProvider = ({ children }) => {
   const categoryContextData = {
 		categoryState,
 		getCategories,
+		getAllCategories,
     addCategory,
 		showToast,
 		setShowToast,

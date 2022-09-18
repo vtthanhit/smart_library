@@ -75,12 +75,12 @@ export const menuData = [
     subMenu: [
       {
         title: 'Danh sách sách',
-        path: '/book/list',
+        path: '/admin/book/list',
         icon: <LibraryBooksOutlinedIcon fontSize='small' />,
       },
       {
         title: 'Thêm sách',
-        path: '/book/add',
+        path: '/admin/book/add',
         icon: <BookmarkAddOutlinedIcon fontSize='small' />,
       },
     ]
