@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '../../components/layout/header';
 import Menu from '../../components/layout/menu';
-import ToastMessage from '../../components/layout/ToastMessage';
+import ToastMessage from '../../components/layout/category/components/ToastMessage';
 
 function Admin() {
   return (
@@ -18,7 +18,6 @@ function Admin() {
           <Outlet />
         </div>
       </div>
-      <ToastMessage />
     </div>
   )
 }

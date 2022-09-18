@@ -6,7 +6,8 @@ import {
 	ADD_CATEGORY,
 	CATEGORIES_LOADED_SUCCESS,
 	CATEGORIES_LOADED_FAIL,
-	DELETE_CATEGORY
+	DELETE_CATEGORY,
+	UPDATE_CATEGORY,
 } from '../contexts/constants';
 import { categoryReducer } from '../reducers/categoryReducer';
 
@@ -14,7 +15,7 @@ export const CategoryContext = createContext();
 
 const CategoryContextProvider = ({ children }) => {
   const [categoryState, dispatch] = useReducer(categoryReducer, {
-		count: 0,
+		length: 0,
 		category: null,
 		categories: [],
 		categoriesLoading: true
@@ -65,7 +66,7 @@ const CategoryContextProvider = ({ children }) => {
 	// Delete category
 	const deleteCategory = async categoryId => {
 		try {
-			const response = await axios.delete(`${apiUrl}/category/${categoryId}`)
+			const response = await axios.delete(`${apiUrl}/category/${categoryId}`);
 			if (response.data.success)
 				dispatch({ type: DELETE_CATEGORY, payload: categoryId })
 				return response.data
@@ -76,6 +77,21 @@ const CategoryContextProvider = ({ children }) => {
 		}
 	}
 
+	// Update category
+	const updateCategory = async updatedCategory => {
+		try {
+      const response = await axios.put(`${apiUrl}/category/${updatedCategory._id}`, updatedCategory);
+			if (response.data.success) {
+				dispatch({ type: UPDATE_CATEGORY, payload: response.data.category })
+				return response.data
+			}
+		} catch (error) {
+			return error.response.data
+			? error.response.data
+			: { success: false, message: 'Server error' }
+		}
+	}
+
   const categoryContextData = {
 		categoryState,
 		getCategories,
@@ -83,6 +99,7 @@ const CategoryContextProvider = ({ children }) => {
 		showToast,
 		setShowToast,
 		deleteCategory,
+		updateCategory,
 		pagination,
 		setPagination,
 	}

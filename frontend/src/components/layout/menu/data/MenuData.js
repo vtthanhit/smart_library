@@ -47,13 +47,8 @@ export const menuData = [
     subMenu: [
       {
         title: 'Danh sách bạn đọc',
-        path: '/student/list',
+        path: '/admin/user',
         icon: <PeopleAltIcon fontSize='small' />,
-      },
-      {
-        title: 'Thêm bạn đọc',
-        path: '/student/add',
-        icon: <PersonAddIcon fontSize='small' />,
       },
     ]
   },

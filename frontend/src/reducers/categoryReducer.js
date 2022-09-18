@@ -2,7 +2,8 @@ import {
   ADD_CATEGORY,
   CATEGORIES_LOADED_SUCCESS,
   CATEGORIES_LOADED_FAIL,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  UPDATE_CATEGORY,
 } from '../contexts/constants';
 
 export const categoryReducer = (state, action) => {
@@ -34,6 +35,16 @@ export const categoryReducer = (state, action) => {
       return {
         ...state,
         categories: state.categories.filter(category => category._id !== payload)
+      }
+
+    case UPDATE_CATEGORY:
+      const newCategories = state.categories.map(category =>
+        category._id === payload._id ? payload : category
+      )
+
+      return {
+        ...state,
+        categories: newCategories
       }
 
     default:
