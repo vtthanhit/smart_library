@@ -38,7 +38,6 @@ const AddCategoryModal = (props) => {
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     handleClose();
   }
-  console.log(pagination);
 
   // useEffect(() => {
   //   setPagination({...pagination, count: count + 1})
@@ -88,7 +87,6 @@ const AddCategoryModal = (props) => {
         </form>
       </Dialog>
     </div>
-
   )
 }
 

@@ -20,6 +20,7 @@ const BookSchema = new Schema({
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'categories',
+    required: true,
   },
   image: {
     data: Buffer,

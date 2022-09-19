@@ -17,5 +17,19 @@ export const UPDATE_USER = 'UPDATE_USER'
 export const FIND_USER = 'FIND_USER'
 
 export const ADD_BOOK = 'ADD_BOOK'
+export const DELETE_BOOK = 'DELETE_BOOK'
+export const FIND_BOOK = 'FIND_BOOK'
+export const UPDATE_BOOK = 'UPDATE_BOOK'
+export const BOOKS_LOADED_SUCCESS = 'BOOKS_LOADED_SUCCESS'
+export const BOOKS_LOADED_FAIL = 'BOOKS_LOADED_FAIL'
+export const ALL_BOOK = 'ALL_BOOK'
+
+export const ADD_REQUEST = 'ADD_REQUEST'
+export const DELETE_REQUEST = 'DELETE_REQUEST'
+export const FIND_REQUEST = 'FIND_REQUEST'
+export const UPDATE_REQUEST = 'UPDATE_REQUEST'
+export const REQUESTS_LOADED_SUCCESS = 'REQUESTS_LOADED_SUCCESS'
+export const REQUESTS_LOADED_FAIL = 'REQUESTS_LOADED_FAIL'
 
 export const PAGY_PAGE_SIZE = 10;
+export const HOME_PAGY_PAGE_SIZE = 12;

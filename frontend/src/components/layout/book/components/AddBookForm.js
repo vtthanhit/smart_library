@@ -11,8 +11,6 @@ const AddBookForm = () => {
   } = useContext(CategoryContext);
 
   const {
-    bookState: { books },
-    getBooks,
     setShowToast,
     addBook,
   } = useContext(BookContext);
@@ -51,6 +49,14 @@ const AddBookForm = () => {
 
     const { success, message } = await addBook(addBookFormData);
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
+    setNewBook({
+      name: '',
+      author: '',
+      description: '',
+      quantity: '',
+      category: '',
+      image: '',
+    });
   }
 
   useEffect(() => {

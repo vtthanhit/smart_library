@@ -3,6 +3,7 @@ const router = express.Router();
 const { verifyToken, verifyTokenAdmin } = require('../middleware/auth');
 
 const Request = require('../models/Request');
+const Book = require("../models/Book");
 
 // admin
 
@@ -66,24 +67,28 @@ router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
 
 // student
 
-router.post('/', verifyToken, async (req, res) => {
+router.post('/borrow', verifyToken, async (req, res) => {
   const { books } = req.body;
+  console.log(books)
   if (!books) return res.json({ success: false, message: 'You need to choose the book you want to borrow.' });
   try {
     const newRequest = new Request({
       user: req.userId,
-      books
+      books,
+      type: 'BORROW',
     });
     await newRequest.save();
+    const book = await Book.findById(req.body.books);
+    await Book.findByIdAndUpdate({_id: req.body.books}, { quantity: book.quantity - 1 }, { new: true });
     return res.json({ success: true, message: 'Create new request successfully', request: newRequest });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
-router.get('/', verifyToken, async (req, res) => {
+router.get('/borrow', verifyToken, async (req, res) => {
   try {
-    const requests = await Request.find({ user: req.userId })
+    const requests = await Request.find({ user: req.userId, type: 'BORROW' })
       .populate('books', ['name'])
       .populate('user', ['username', 'fullname']);
     
@@ -101,7 +106,7 @@ router.get('/:id', verifyToken, async (req, res) => {
       .populate('books', ['name'])
       .populate('user', ['username', 'fullname']);
 
-    if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
+    if (!request) return res.status(404).json({ success: false, message: 'Data not found' });
 
     return res.status(200).json({ success: true, request });
   } catch (error) {

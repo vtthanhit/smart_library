@@ -6,10 +6,15 @@ const RequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users'
   },
-  books: [{
-    type: Schema.Types.ObjectId,
-    ref: 'books'
-  }],
+  books: [ {
+      type: Schema.Types.ObjectId,
+      ref: 'books'
+    }
+  ],
+  type: {
+    type: String,
+    enum: ['BORROW', 'RETURN'],
+  },
   status: {
     type: String,
     enum: ['PENDDING', 'ACCEPT', 'REJECT'],
