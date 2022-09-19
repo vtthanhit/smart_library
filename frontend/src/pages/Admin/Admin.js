@@ -3,14 +3,13 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '../../components/layout/header';
 import Menu from '../../components/layout/menu';
-import ToastMessage from '../../components/layout/category/components/ToastMessage';
 
 function Admin() {
   return (
     <div className='w-full flex flex-auto items-stretch bg-root-bg'>
       <div className='w-full flex flex-auto items-stretch min-h-screen'>
         {/* Menu */}
-        <Menu />
+        <Menu page='admin' />
 
         <div className='xl:pl-64 flex flex-auto items-stretch p-0 basis-full flex-col w-0 min-w-0 min-h-0'>
           {/* Search */}

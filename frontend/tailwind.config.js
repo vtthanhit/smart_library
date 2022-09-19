@@ -15,6 +15,9 @@ module.exports = {
         '1400': '1400px',
         'calc-xxl': 'calc(1440px - calc(1.625rem * 2))',
       },
+      minWidth: {
+        '240': '240px',
+      },
       minHeight: {
         '1': '1px',
       },

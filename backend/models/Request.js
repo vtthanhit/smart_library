@@ -6,14 +6,25 @@ const RequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users'
   },
-  books: [{
-    type: Schema.Types.ObjectId,
-    ref: 'books'
-  }],
+  books: {
+    book: {
+      type: Schema.Types.ObjectId,
+      ref: 'books',
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+    }
+  },
+  type: {
+    type: String,
+    enum: ['BORROW', 'RETURN'],
+  },
   status: {
     type: String,
-    enum: ['PENDDING', 'ACCEPT', 'REJECT'],
-    default: 'PENDDING',
+    enum: ['PENDING', 'ACCEPT', 'REJECT'],
+    default: 'PENDING',
   }
 }, { timestamps: true });
 

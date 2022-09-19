@@ -22,28 +22,37 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
   if (!name)
     return res
       .status(400)
-      .json({ success: false, message: "Book name is require." });
+      .json({ success: false, message: "Tên sách là bắt buộc!" });
   if (!author)
     return res
       .status(400)
-      .json({ success: false, message: "Author is require." });
+      .json({ success: false, message: "Tác giả là bắt buộc!" });
   if (!category)
     return res
       .status(400)
-      .json({ success: false, message: "Category is require." });
+      .json({ success: false, message: "Danh mục là bắt buộc!" });
 
   try {
-    const newBook = new Book({
+    let newBook = new Book({
       name,
       author,
       description,
       quantity,
       category,
-      image: {
-        data: fs.readFileSync("uploads/" + req.file.filename),
-        contentType: "image/png",
-      },
     });
+    if (req.file) {
+      newBook = new Book({
+        name,
+        author,
+        description,
+        quantity,
+        category,
+        image: {
+          data: fs.readFileSync("uploads/" + req.file.filename),
+          contentType: "image/png",
+        },
+      });
+    }
     await newBook.save();
     return res.status(200).json({
       success: true,
@@ -51,7 +60,7 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
       book: newBook,
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: "Internal SERVER" });
   }
 });
 
@@ -60,6 +69,16 @@ router.get("/", async (req, res) => {
     const books = await Book.find().populate("category", ["name"]);
 
     return res.status(200).json({ success: true, books });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal SERVER" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id).populate("category", ["name"]);
+
+    return res.status(200).json({ success: true, book });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal SERVER" });
   }
@@ -78,7 +97,7 @@ router.get("/category/:categoryId", async (req, res) => {
   }
 });
 
-router.patch("/:id", verifyTokenAdmin, async (req, res) => {
+router.put("/:id", upload.single("image"), verifyTokenAdmin, async (req, res) => {
   const { name, author, description, quantity, category } = req.body;
 
   try {
@@ -89,6 +108,19 @@ router.patch("/:id", verifyTokenAdmin, async (req, res) => {
       quantity,
       category,
     };
+    if (req.file) {
+      updatedBook = {
+        name,
+        author,
+        description,
+        quantity,
+        category,
+        image: {
+          data: fs.readFileSync("uploads/" + req.file.filename),
+          contentType: "image/png",
+        },
+      }
+    }
     const bookUpdateCondition = { _id: req.params.id };
 
     updatedBook = await Book.findOneAndUpdate(
@@ -107,7 +139,7 @@ router.patch("/:id", verifyTokenAdmin, async (req, res) => {
       book: updatedBook,
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal SERVER" });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 

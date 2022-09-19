@@ -117,7 +117,6 @@ const ListCategories = () => {
               <form onSubmit={onSubmitUpdate}>
                 <DialogTitle>
                   Cập nhật danh mục!
-                  aria-label="close"
                   <IconButton
                   onClick={() => {setOpenUpdate(false)}}
                   sx={{

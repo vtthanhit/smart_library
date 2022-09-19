@@ -45,4 +45,7 @@
   th {
     padding: 0.625rem 1.25rem;
   }
+  td {
+    vertical-align: middle;
+  }
 }
