@@ -36,6 +36,8 @@ module.exports = {
       colors: {
         'primary': '#696cff',
         'border-color': '#d9dee3',
+        'border-color2': '#c4c4c4',
+        'border-hover': 'red !important',
         'form': '#566a7f',
         'root-bg': '#f5f5f9',
         'body-color': '#697a8d',
@@ -58,6 +60,9 @@ module.exports = {
         '148': '148px',
         '240': '240px',
       },
+      borderWidth: {
+        '1': '1px'
+      }
 		},
     screens: {
       'xs': '992px',

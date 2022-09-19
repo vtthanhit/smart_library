@@ -2,13 +2,21 @@ import {
   ADD_CATEGORY,
   CATEGORIES_LOADED_SUCCESS,
   CATEGORIES_LOADED_FAIL,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  UPDATE_CATEGORY,
+  ALL_CATEGORY,
 } from '../contexts/constants';
 
 export const categoryReducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case ALL_CATEGORY:
+      return {
+        ...state,
+        categories: payload.categories,
+      }
+
     case CATEGORIES_LOADED_SUCCESS:
       return {
         ...state,
@@ -34,6 +42,16 @@ export const categoryReducer = (state, action) => {
       return {
         ...state,
         categories: state.categories.filter(category => category._id !== payload)
+      }
+
+    case UPDATE_CATEGORY:
+      const newCategories = state.categories.map(category =>
+        category._id === payload._id ? payload : category
+      )
+
+      return {
+        ...state,
+        categories: newCategories
       }
 
     default:

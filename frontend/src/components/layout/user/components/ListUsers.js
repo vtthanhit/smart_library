@@ -6,24 +6,24 @@ import Pagination from '@mui/material/Pagination';
 import CloseIcon from '@mui/icons-material/Close';
 
 import Loading from '../../Loading';
-import { CategoryContext } from '../../../../contexts/CategoryContext';
+import { UserContext } from '../../../../contexts/UserContext';
 import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
 
-const ListCategories = () => {
+const ListUsers = () => {
   const {
-    categoryState: { count, categories, categoriesLoading },
-    getCategories,
-    deleteCategory,
-    updateCategory,
+    userState: { count, users, usersLoading },
+    getUsers,
+    deleteUser,
+    updateUser,
     pagination,
     setPagination,
     setShowToast,
-  } = useContext(CategoryContext);
+  } = useContext(UserContext);
 
   const [openDelete, setOpenDelete] = useState(false);
-  const [catDelete, setCatDelete] = useState(null);
+  const [userDelete, setUserDelete] = useState(null);
   const [openUpdate, setOpenUpdate] = useState(false);
-  const [catUpdate, setCatUpdate] = useState({});
+  const [userUpdate, setUserUpdate] = useState({});
 
   const handlePaginateChange = (event, page) => {
     const from = (page - 1) * PAGY_PAGE_SIZE;
@@ -34,32 +34,33 @@ const ListCategories = () => {
 
   useEffect(() => {
     setPagination({ ...pagination, count });
-    getCategories(pagination.from, pagination.to);
+    getUsers(pagination.from, pagination.to);
   }, [pagination.from, pagination.to, count]);
 
-  if (categoriesLoading) {
+  if (usersLoading) {
     return <Loading />
   }
-  const handleDeleteCategory = async () => {
-    const { success, message } = await deleteCategory(catDelete);
+  const handleDeleteUser = async () => {
+    const { success, message } = await deleteUser(userDelete);
     if (success) {
       setPagination({...pagination, count: count - 1});
-      getCategories(pagination.from, pagination.to);
+      getUsers(pagination.from, pagination.to);
     }
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     setOpenDelete(false);
-    setCatDelete(null);
+    setUserDelete(null);
   }
 
-  const onChangeUpdateCategory = event => {
-    setCatUpdate({...catUpdate, [event.target.name]: event.target.value});
+  const onChangeUpdateUser = event => {
+    setUserUpdate({...userUpdate, [event.target.name]: event.target.value});
   }
 
-  const onSubmitUpdate = async event => {
+  const onSubmitUpdateUser = async event => {
     event.preventDefault();
-    const { success, message } = await updateCategory(catUpdate);
+    const { success, message } = await updateUser(userUpdate);
     if (success) {
-      getCategories(pagination.from, pagination.to)
+      getUsers(pagination.from, pagination.to)
+      setPagination({...pagination, count: count + 1});
     }
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     setOpenUpdate(false);
@@ -67,31 +68,31 @@ const ListCategories = () => {
 
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
-      <h5 className='rounded-t-lg p-6 mb-0'>Danh sách danh mục</h5>
+      <h5 className='rounded-t-lg p-6 mb-0'>Danh sách bạn đọc</h5>
       <div className='p-6 pt-0 flex-auto'>
         <div className='whitespace-nowrap overflow-x-auto'>
           <table className='mb-0'>
             <thead className='border-b-2 border-solid border-border-color'>
               <tr>
                 <th>STT</th>
-                <th>Tên danh mục</th>
-                <th>Tổng số lượng sách</th>
+                <th>Mã bạn đọc</th>
+                <th>Tên bạn đọc</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {
-                categories.map((category, index) => {
+                users.map((user, index) => {
                   return (
-                    <tr key={category._id}>
+                    <tr key={user._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
-                      <td>{category.name}</td>
-                      <td>1</td>
+                      <td>{user.username}</td>
+                      <td>{user.fullname ? user.fullname : "Chưa đặt tên, vui lòng cập nhật!"}</td>
                       <td className='max-w-0'>
-                        <Button onClick={() => {setOpenDelete(true); setCatDelete(category._id)}} className='mr-2' size="small" color="error" variant="contained" startIcon={<DeleteIcon />}>
+                        <Button onClick={() => {setOpenDelete(true); setUserDelete(user._id)}} className='mr-2' size="small" color="error" variant="contained" startIcon={<DeleteIcon />}>
                           Xóa
                         </Button>
-                        <Button onClick={() => {setOpenUpdate(true); setCatUpdate(category)}} size="small" color="info" variant="contained" startIcon={<ModeEditOutlineIcon />}>
+                        <Button onClick={() => {setOpenUpdate(true); setUserUpdate(user)}} size="small" color="info" variant="contained" startIcon={<ModeEditOutlineIcon />}>
                           Cập nhật
                         </Button>
                       </td>
@@ -103,22 +104,22 @@ const ListCategories = () => {
 
           </table>
           {/* dialog confirm delete */}
-          <Dialog open={openDelete} onClose={() => { setOpenDelete(false); setCatDelete(null) }}>
-            <DialogTitle id="alert-dialog-title">Xác nhận xóa danh mục?</DialogTitle>
+          <Dialog open={openDelete} onClose={() => { setOpenDelete(false); setUserDelete(null) }}>
+            <DialogTitle id="alert-dialog-title">Xác nhận xóa bạn đọc?</DialogTitle>
             <DialogActions>
-              <Button onClick={() => { setOpenDelete(false); setCatDelete(null) }}>Trở về</Button>
-              <Button onClick={() => { handleDeleteCategory() }} autoFocus>Đồng ý</Button>
+              <Button onClick={() => { setOpenDelete(false); setUserDelete(null) }}>Trở về</Button>
+              <Button onClick={() => { handleDeleteUser() }} autoFocus>Đồng ý</Button>
             </DialogActions>
           </Dialog>
 
           {/* dialog update */}
           <div>
             <Dialog open={openUpdate} onClose={() => {setOpenUpdate(false)}} fullWidth={true}>
-              <form onSubmit={onSubmitUpdate}>
+              <form onSubmit={onSubmitUpdateUser}>
                 <DialogTitle>
-                  Cập nhật danh mục!
-                  aria-label="close"
+                  Cập nhật bạn đọc!
                   <IconButton
+                  aria-label="close"
                   onClick={() => {setOpenUpdate(false)}}
                   sx={{
                     position: 'absolute',
@@ -132,18 +133,44 @@ const ListCategories = () => {
                 </DialogTitle>
                 <DialogContent>
                   <InputLabel shrink>
-                    Tên danh mục
+                    Mã bạn đọc
                   </InputLabel>
                   <TextField
                     id="outlined-basic"
-                    name='name'
+                    name='username'
                     variant="outlined"
-                    placeholder='Tên danh mục'
+                    placeholder='Mã bạn đọc'
                     fullWidth={true}
                     size="small"
-                    value={catUpdate.name}
+                    value={userUpdate.username}
                     required
-                    onChange={onChangeUpdateCategory}
+                    onChange={onChangeUpdateUser}
+                  />
+                  <InputLabel shrink>
+                    Họ tên bạn đọc
+                  </InputLabel>
+                  <TextField
+                    id="outlined-basic"
+                    name='fullname'
+                    variant="outlined"
+                    placeholder='Họ tên bạn đọc'
+                    fullWidth={true}
+                    size="small"
+                    value={userUpdate.fullname}
+                    onChange={onChangeUpdateUser}
+                  />
+                  <InputLabel shrink>
+                    Mật khẩu (mật định là: Abcd1234)
+                  </InputLabel>
+                  <TextField
+                    id="outlined-basic"
+                    name='password'
+                    type='password'
+                    variant="outlined"
+                    placeholder='&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;'
+                    fullWidth={true}
+                    size="small"
+                    onChange={onChangeUpdateUser}
                   />
                 </DialogContent>
                 <DialogActions>
@@ -167,4 +194,4 @@ const ListCategories = () => {
   )
 }
 
-export default ListCategories;
+export default ListUsers;

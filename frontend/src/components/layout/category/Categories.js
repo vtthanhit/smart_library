@@ -2,7 +2,7 @@ import React from 'react'
 import Breadcrumbs from '../Breadcrumbs'
 import AddCategoryModal from './components/AddCategoryModal';
 import ListCategories from './components/ListCategories';
-import ToastMessage from './../ToastMessage';
+import ToastMessage from './components/ToastMessage';
 
 function Categories() {
   return (

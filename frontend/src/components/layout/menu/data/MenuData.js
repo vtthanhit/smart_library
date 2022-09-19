@@ -47,13 +47,8 @@ export const menuData = [
     subMenu: [
       {
         title: 'Danh sách bạn đọc',
-        path: '/student/list',
+        path: '/admin/user',
         icon: <PeopleAltIcon fontSize='small' />,
-      },
-      {
-        title: 'Thêm bạn đọc',
-        path: '/student/add',
-        icon: <PersonAddIcon fontSize='small' />,
       },
     ]
   },
@@ -80,12 +75,12 @@ export const menuData = [
     subMenu: [
       {
         title: 'Danh sách sách',
-        path: '/book/list',
+        path: '/admin/book/list',
         icon: <LibraryBooksOutlinedIcon fontSize='small' />,
       },
       {
         title: 'Thêm sách',
-        path: '/book/add',
+        path: '/admin/book/add',
         icon: <BookmarkAddOutlinedIcon fontSize='small' />,
       },
     ]

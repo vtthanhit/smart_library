@@ -3,6 +3,7 @@ const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const { verifyToken, verifyTokenAdmin } = require('../middleware/auth');
+const { REGEX_PASSWORD } = require('../constants/appConstants')
 
 const User = require('../models/User');
 
@@ -18,38 +19,38 @@ router.get('/', verifyToken, async(req, res) => {
   }
 });
 
-router.post('/register', async (req, res) => {
-  const { username, password, fullname } = req.body;
-  const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-  if(!username || !password) {
-    return res.status(400).json({ success: false, message: 'Missing username/password' });
-  }
+// router.post('/register', async (req, res) => {
+//   const { username, password, fullname } = req.body;
+//   const regexPassword = REGEX_PASSWORD;
+//   if(!username || !password) {
+//     return res.status(400).json({ success: false, message: 'Missing username/password' });
+//   }
 
-  if(!password.match(regexPassword)) {
-    return res.status(400).json({ success: false, message: 'Incorrect password format' });
-  }
+//   if(!password.match(regexPassword)) {
+//     return res.status(400).json({ success: false, message: 'Incorrect password format' });
+//   }
 
-  try {
-    const user = await User.findOne({ username });
+//   try {
+//     const user = await User.findOne({ username });
 
-    if(user) {
-      return res.status(400).json({ success: false, message: 'Username already' });
-    }
+//     if(user) {
+//       return res.status(400).json({ success: false, message: 'Username already' });
+//     }
 
-    const hashPassword = await argon2.hash(password);
-    const newUser = new User({
-      username,
-      fullname: fullname ? fullname : username,
-      password: hashPassword,
-    });
-    await newUser.save();
-    const accessToken = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SCREET);
+//     const hashPassword = await argon2.hash(password);
+//     const newUser = new User({
+//       username,
+//       fullname: fullname ? fullname : username,
+//       password: hashPassword,
+//     });
+//     await newUser.save();
+//     const accessToken = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SCREET);
 
-    return res.status(200).json({ success: true, message: 'User created susscessfully', accessToken });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'Internal SERVER' });
-  }
-});
+//     return res.status(200).json({ success: true, message: 'User created susscessfully', accessToken });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: 'Internal SERVER' });
+//   }
+// });
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;

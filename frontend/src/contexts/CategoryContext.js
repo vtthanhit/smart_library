@@ -6,7 +6,9 @@ import {
 	ADD_CATEGORY,
 	CATEGORIES_LOADED_SUCCESS,
 	CATEGORIES_LOADED_FAIL,
-	DELETE_CATEGORY
+	DELETE_CATEGORY,
+	UPDATE_CATEGORY,
+	ALL_CATEGORY,
 } from '../contexts/constants';
 import { categoryReducer } from '../reducers/categoryReducer';
 
@@ -32,7 +34,7 @@ const CategoryContextProvider = ({ children }) => {
     to: PAGY_PAGE_SIZE,
   });
 
-	// Get all category
+	// Get all category with paginate
 	const getCategories = async (from, to) => {
 		try {
 			const response = await axios.get(`${apiUrl}/category`);
@@ -41,6 +43,19 @@ const CategoryContextProvider = ({ children }) => {
 				const count = data.length;
 				const categories = data.slice(from, to);
 				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: { count, categories } })
+			}
+		} catch (error) {
+			dispatch({ type: CATEGORIES_LOADED_FAIL })
+		}
+	}
+
+	// Get all category
+	const getAllCategories = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/category`);
+			if (response.data.success) {
+				const categories = response.data.categories;
+				dispatch({ type: ALL_CATEGORY, payload: { categories } })
 			}
 		} catch (error) {
 			dispatch({ type: CATEGORIES_LOADED_FAIL })
@@ -65,21 +80,41 @@ const CategoryContextProvider = ({ children }) => {
 	// Delete category
 	const deleteCategory = async categoryId => {
 		try {
-			const response = await axios.delete(`${apiUrl}/category/${categoryId}`)
+			const response = await axios.delete(`${apiUrl}/category/${categoryId}`);
 			if (response.data.success)
 				dispatch({ type: DELETE_CATEGORY, payload: categoryId })
+				return response.data
 		} catch (error) {
-			console.log(error)
+			return error.response.data
+				? error.response.data
+				: { success: false, message: 'Server error' }
+		}
+	}
+
+	// Update category
+	const updateCategory = async updatedCategory => {
+		try {
+      const response = await axios.put(`${apiUrl}/category/${updatedCategory._id}`, updatedCategory);
+			if (response.data.success) {
+				dispatch({ type: UPDATE_CATEGORY, payload: response.data.category })
+				return response.data
+			}
+		} catch (error) {
+			return error.response.data
+			? error.response.data
+			: { success: false, message: 'Server error' }
 		}
 	}
 
   const categoryContextData = {
 		categoryState,
 		getCategories,
+		getAllCategories,
     addCategory,
 		showToast,
 		setShowToast,
 		deleteCategory,
+		updateCategory,
 		pagination,
 		setPagination,
 	}
