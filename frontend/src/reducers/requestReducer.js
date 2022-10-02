@@ -1,5 +1,11 @@
 import {
   ADD_REQUEST,
+  REQUESTS_BORROW_LOADED_SUCCESS,
+  REQUESTS_BORROW_LOADED_FAIL,
+  REQUESTS_RETURN_LOADED_SUCCESS,
+  REQUESTS_RETURN_LOADED_FAIL,
+  DELETE_REQUEST,
+  UPDATE_REQUEST,
 } from '../contexts/constants';
 
 export const requestReducer = (state, action) => {
@@ -12,20 +18,35 @@ export const requestReducer = (state, action) => {
     //     categories: payload.categories,
     //   }
 
-    // case CATEGORIES_LOADED_SUCCESS:
-    //   return {
-    //     ...state,
-    //     categories: payload.categories,
-    //     count: payload.count,
-    //     categoriesLoading: false,
-    //   }
+    case REQUESTS_BORROW_LOADED_SUCCESS:
+      return {
+        ...state,
+        requests: payload.requests,
+        count: payload.count,
+        requestsLoading: false,
+      }
 
-    // case CATEGORIES_LOADED_FAIL:
-    //   return {
-    //     ...state,
-    //     categories: [],
-    //     categoriesLoading: false,
-    //   }
+    case REQUESTS_BORROW_LOADED_FAIL:
+      return {
+        ...state,
+        requests: [],
+        requestsLoading: false,
+      }
+
+    case REQUESTS_RETURN_LOADED_SUCCESS:
+      return {
+        ...state,
+        requests: payload.requests,
+        count: payload.count,
+        requestsLoading: false,
+      }
+
+    case REQUESTS_RETURN_LOADED_FAIL:
+      return {
+        ...state,
+        requests: [],
+        requestsLoading: false,
+      }
 
     case ADD_REQUEST:
       return {
@@ -33,21 +54,21 @@ export const requestReducer = (state, action) => {
         requests: [...state.requests, payload],
       }
 
-    // case DELETE_CATEGORY:
-    //   return {
-    //     ...state,
-    //     categories: state.categories.filter(category => category._id !== payload)
-    //   }
+    case DELETE_REQUEST:
+      return {
+        ...state,
+        requests: state.requests.filter(request => request._id !== payload)
+      }
 
-    // case UPDATE_CATEGORY:
-    //   const newCategories = state.categories.map(category =>
-    //     category._id === payload._id ? payload : category
-    //   )
+    case UPDATE_REQUEST:
+      const newRequests = state.requests.map(request =>
+        request._id === payload._id ? payload : request
+      )
 
-    //   return {
-    //     ...state,
-    //     categories: newCategories
-    //   }
+      return {
+        ...state,
+        requests: newRequests
+      }
 
     default:
       return state;

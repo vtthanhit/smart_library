@@ -27,12 +27,12 @@ export const menuData = [
     subMenu: [
       {
         title: 'Yêu cầu mượn',
-        path: '/request/aaaa',
+        path: '/admin/request/borrow',
         icon: <AssignmentTurnedInOutlinedIcon fontSize='small' />,
       },
       {
         title: 'Yêu cầu trả',
-        path: '/request/bbbb',
+        path: '/admin/request/return',
         icon: <AutorenewOutlinedIcon fontSize='small' />,
       },
     ]

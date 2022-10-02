@@ -6,16 +6,14 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Breadcrumbs from './../Breadcrumbs';
-import { BookContext } from './../../../contexts/BookContext';
-import Loading from './../Loading';
+
+import Breadcrumbs from '../Breadcrumbs';
+import { BookContext } from '../../../contexts/BookContext';
+import Loading from '../Loading';
 import { HOME_PAGY_PAGE_SIZE } from '../../../contexts/constants';
-import { covertImageBase64 } from './../book/covertImageBase64';
+import { covertImageBase64 } from '../book/covertImageBase64';
 import { RequestContext } from '../../../contexts/RequestContext';
 import ToastMessage from './components/ToastMessage';
-import { Link } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
-import AddRequestModal from './components/AddRequestModal';
 
 const BookCard = () => {
   const {
@@ -47,8 +45,8 @@ const BookCard = () => {
     return <Loading />
   }
 
-  const abc = async (bookId) => {
-    const book = { books: bookId }
+  const addNow = async (bookId) => {
+    const book = { books: {book: bookId, quantity: 1} }
     const { success, message } = await addRequest(book);
     if (success) {
       getBooks(pagination.from, pagination.to);
@@ -61,9 +59,7 @@ const BookCard = () => {
       <div className='py-6 flex-grow xxl:px-2 xxl:max-w-1400 xs:px-7 w-full mr-auto ml-auto'>
         <div className='flex justify-between items-center'>
           <Breadcrumbs />
-          <AddRequestModal />
           <ToastMessage />
-          
         </div>
         <Grid container spacing={2}>
           {
@@ -97,7 +93,7 @@ const BookCard = () => {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button onClick={() => abc(book._id)} size="small">Thuê ngay</Button>
+                      <Button onClick={() => addNow(book._id)} size="small">Thuê ngay</Button>
                     </CardActions>
                   </Card>
                 </Grid>

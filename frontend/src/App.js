@@ -18,6 +18,10 @@ import UpdateBook from './components/layout/book/UpdateBook';
 import Home from './pages/Home/Home';
 import BookCard from './components/layout/bookCard';
 import RequestContextProvider from './contexts/RequestContext';
+import UserRequestBorrow from './components/layout/userRequest/UserRequestBorrow';
+import UserRequestReturn from './components/layout/userRequest/UserRequestReturn';
+import AdminRequestReturn from './components/layout/adminRequest/AdminRequestReturn';
+import AdminRequestBorrow from './components/layout/adminRequest/AdminRequestBorrow';
 
 function App() {
   return (
@@ -36,7 +40,27 @@ function App() {
                   </RequestContextProvider>
                 </BookContextProvider>
               </CategoryContextProvider>
-            } 
+            }
+            />
+            <Route path='/borrow' element={
+              <CategoryContextProvider>
+                <BookContextProvider>
+                  <RequestContextProvider>
+                    <UserRequestBorrow/>
+                  </RequestContextProvider>
+                </BookContextProvider>
+              </CategoryContextProvider>
+            }
+            />
+            <Route path='/return' element={
+              <CategoryContextProvider>
+                <BookContextProvider>
+                  <RequestContextProvider>
+                    <UserRequestReturn/>
+                  </RequestContextProvider>
+                </BookContextProvider>
+              </CategoryContextProvider>
+            }
             />
           </Route>
         </Route>
@@ -63,6 +87,26 @@ function App() {
                 <BookContextProvider>
                   <Books />
                 </BookContextProvider>
+              } />
+            </Route>
+            <Route path='request'>
+              <Route path='return' element={
+                <CategoryContextProvider>
+                  <BookContextProvider>
+                    <RequestContextProvider>
+                      <AdminRequestReturn/>
+                    </RequestContextProvider>
+                  </BookContextProvider>
+                </CategoryContextProvider>
+              } />
+              <Route path='borrow' element={
+                <CategoryContextProvider>
+                  <BookContextProvider>
+                    <RequestContextProvider>
+                      <AdminRequestBorrow/>
+                    </RequestContextProvider>
+                  </BookContextProvider>
+                </CategoryContextProvider>
               } />
             </Route>
           </Route>

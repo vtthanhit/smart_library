@@ -7,12 +7,12 @@ const Book = require("../models/Book");
 
 // admin
 
-router.get('/admin', verifyTokenAdmin, async (req, res) => {
+router.get('/admin/return', verifyTokenAdmin, async (req, res) => {
   try {
-    const requests = await Request.find()
-      .populate('books', ['name'])
+    const requests = await Request.find({type: 'RETURN'})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
       .populate('user', ['username', 'fullname']);
-    
+
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
 
     return res.status(200).json({ success: true, requests });
@@ -21,31 +21,55 @@ router.get('/admin', verifyTokenAdmin, async (req, res) => {
   }
 });
 
-router.patch('/admin/:id', verifyTokenAdmin, async (req, res) => {
+router.get('/admin/borrow', verifyTokenAdmin, async (req, res) => {
+  try {
+    const requests = await Request.find({type: 'BORROW'})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user', ['username', 'fullname']);
+
+    if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
+
+    return res.status(200).json({ success: true, requests });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+  }
+});
+
+router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
   const { user, books, status } = req.body;
+  const request = await Request.findById(req.params.id);
 
   try {
     let updatedRequest = {
       user,
       books,
-      status: status || 'PENDDING',
+      status: status || 'PENDING',
     };
     const requestUpdateCondition = { _id: req.params.id };
 
     updatedRequest = await Request.findOneAndUpdate(
       requestUpdateCondition, updatedRequest, { new: true }
     )
-      .populate('books', ['name'])
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
       .populate('user', ['username', 'fullname']);
-
-    if (!updatedRequest) 
+      
+    if (!updatedRequest)
       return res.status(404).json({ success: false, message: 'Data not found' });
-    return res.status(201).json({ 
-      success: true, 
-      message: 'Your request updated successfully', request: updatedRequest,
+
+    if (request.type === 'RETURN') {
+      const book = await Book.findById(request.books.book);
+      await Book.findByIdAndUpdate({_id: request.books.book}, { quantity: book.quantity + request.books.quantity }, { new: true });
+      return res.status(201).json({
+        success: true,
+        message: 'Cập nhật thành công!', request: updatedRequest,
+      });
+    }
+    return res.status(201).json({
+      success: true,
+      message: 'Cập nhật thành công!', request: updatedRequest,
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
@@ -54,10 +78,10 @@ router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
     const requestDeleteCondition = { _id: req.params.id };
     const deletedRequest = await Request.findByIdAndRemove(requestDeleteCondition);
 
-    if (!deletedRequest) 
+    if (!deletedRequest)
       return res.status(404).json({ success: false, message: 'Data not found' });
-    return res.status(201).json({ 
-      success: true, 
+    return res.status(201).json({
+      success: true,
       message: 'Book deleted successfully', request: deletedRequest,
     });
   } catch (error) {
@@ -69,17 +93,19 @@ router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
 
 router.post('/borrow', verifyToken, async (req, res) => {
   const { books } = req.body;
-  console.log(books)
-  if (!books) return res.json({ success: false, message: 'You need to choose the book you want to borrow.' });
+  if (!books.book) return res.json({ success: false, message: 'You need to choose the book you want to borrow.' });
   try {
     const newRequest = new Request({
       user: req.userId,
-      books,
+      books: {
+        book: books.book,
+        quantity: books.quantity,
+      },
       type: 'BORROW',
     });
     await newRequest.save();
-    const book = await Book.findById(req.body.books);
-    await Book.findByIdAndUpdate({_id: req.body.books}, { quantity: book.quantity - 1 }, { new: true });
+    const book = await Book.findById(req.body.books.book);
+    await Book.findByIdAndUpdate({_id: req.body.books.book}, { quantity: book.quantity - books.quantity }, { new: true });
     return res.json({ success: true, message: 'Create new request successfully', request: newRequest });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
@@ -89,9 +115,23 @@ router.post('/borrow', verifyToken, async (req, res) => {
 router.get('/borrow', verifyToken, async (req, res) => {
   try {
     const requests = await Request.find({ user: req.userId, type: 'BORROW' })
-      .populate('books', ['name'])
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
       .populate('user', ['username', 'fullname']);
-    
+
+    if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
+
+    return res.status(200).json({ success: true, requests });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+  }
+});
+
+router.get('/return', verifyToken, async (req, res) => {
+  try {
+    const requests = await Request.find({ user: req.userId, type: 'RETURN' })
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user', ['username', 'fullname']);
+
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
 
     return res.status(200).json({ success: true, requests });
@@ -114,45 +154,86 @@ router.get('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.patch('/:id', verifyToken, async (req, res) => {
-  const { books } = req.body;
+router.put('/borrow/:id', verifyToken, async (req, res) => {
+  const { type, books } = req.body;
+  const request = await Request.findById(req.params.id);
+  const currentQuantity = request.books.quantity;
 
-  try {
-    let updatedRequest = {
-      books
-    };
-    const requestUpdateCondition = { user: req.userId, _id: req.params.id };
+  if (type) {
+    try {
+      let updateType = { 
+        type,
+        status: "PENDING"
+      };
+      const requestChangeCondition = { user: req.userId, _id: req.params.id };
+      updateType = await Request.findOneAndUpdate(requestChangeCondition, updateType, { new: true })
+        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate('user', ['username', 'fullname']);
 
-    updatedRequest = await Request.findOneAndUpdate(
-      requestUpdateCondition, updatedRequest, { new: true }
-    )
-      .populate('books', ['name'])
-      .populate('user', ['username', 'fullname']);
-
-    if (!updatedRequest) 
-      return res.status(404).json({ success: false, message: 'Data not found' });
-    return res.status(201).json({ 
-      success: true, 
-      message: 'Your request updated successfully', request: updatedRequest,
-    });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+      if (!updateType)
+        return res.status(404).json({ success: false, message: 'Không tìm thấy dữ liệu' });
+      return res.status(201).json({
+          success: true,
+          message: 'Trả thành công!', request: updateType,
+        });
+      } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+  else {
+    try {
+      let updatedRequest = {
+        books: {
+          book: books.book,
+          quantity: books.quantity,
+        },
+      };
+      const requestUpdateCondition = { user: req.userId, _id: req.params.id };
+  
+      updatedRequest = await Request.findOneAndUpdate(
+        requestUpdateCondition, updatedRequest, { new: true }
+      )
+        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate('user', ['username', 'fullname']);
+  
+      if (!updatedRequest)
+        return res.status(404).json({ success: false, message: 'Data not found' });
+      
+      const book = await Book.findById(req.body.books.book);
+      await Book.findByIdAndUpdate({_id: req.body.books.book}, { quantity: book.quantity + currentQuantity - books.quantity }, { new: true });
+      return res.status(201).json({
+        success: true,
+        message: 'Cập nhật yêu cầu của bạn thành công!', request: updatedRequest,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+
+
+router.delete('/borrow/:id', verifyToken, async (req, res) => {
   try {
     const requestDeleteCondition = { user: req.userId, _id: req.params.id };
-    const deletedRequest = await Request.findByIdAndRemove(requestDeleteCondition);
-
-    if (!deletedRequest) 
-      return res.status(404).json({ success: false, message: 'Data not found' });
-    return res.status(201).json({ 
-      success: true, 
-      message: 'Book deleted successfully', request: deletedRequest,
-    });
+    const request = await Request.findOne(requestDeleteCondition);
+    if (!request) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy dữ liệu!' });
+    } else {
+      if (request.type === 'BORROW') {
+        const deletedRequest = await Request.findByIdAndRemove(requestDeleteCondition);
+        const book = await Book.findById(request.books.book);
+        await Book.findByIdAndUpdate({_id: request.books.book}, { quantity: book.quantity + request.books.quantity }, { new: true });
+        return res.status(201).json({
+          success: true,
+          message: 'Xoá yêu cầu thành công!', request: deletedRequest,
+        });
+      } else {
+        return res.status(400).json({ success: false, message: 'Không thể xoá yêu cầu trả!' });
+      }
+    }
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
