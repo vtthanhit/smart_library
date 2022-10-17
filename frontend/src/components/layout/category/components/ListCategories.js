@@ -11,7 +11,7 @@ import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
 
 const ListCategories = () => {
   const {
-    categoryState: { count, categories, categoriesLoading },
+    categoryState: { count, categories, amountBooks, categoriesLoading },
     getCategories,
     deleteCategory,
     updateCategory,
@@ -86,7 +86,13 @@ const ListCategories = () => {
                     <tr key={category._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
                       <td>{category.name}</td>
-                      <td>1</td>
+                      <td>
+                        {amountBooks.map((amountBook) => {
+                          return (
+                            amountBook._id === category._id ? amountBook.totalAmount : ""
+                          )
+                        })}
+                      </td>
                       <td className='max-w-0'>
                         <Button onClick={() => {setOpenDelete(true); setCatDelete(category._id)}} className='mr-2' size="small" color="error" variant="contained" startIcon={<DeleteIcon />}>
                           Xóa
@@ -104,7 +110,7 @@ const ListCategories = () => {
           </table>
           {/* dialog confirm delete */}
           <Dialog open={openDelete} onClose={() => { setOpenDelete(false); setCatDelete(null) }}>
-            <DialogTitle id="alert-dialog-title">Xác nhận xóa danh mục?</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Xóa danh mục sẽ xóa tất cả các đầu sách thuộc danh mục này. Bạn chắc chắn muốn xóa?</DialogTitle>
             <DialogActions>
               <Button onClick={() => { setOpenDelete(false); setCatDelete(null) }}>Trở về</Button>
               <Button onClick={() => { handleDeleteCategory() }} autoFocus>Đồng ý</Button>

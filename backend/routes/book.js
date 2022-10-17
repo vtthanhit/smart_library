@@ -70,7 +70,7 @@ router.get("/", async (req, res) => {
 
     return res.status(200).json({ success: true, books });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal SERVER" });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 

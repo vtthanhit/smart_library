@@ -64,26 +64,51 @@ const AddUserModal = (props) => {
           </DialogTitle>
           <DialogContent>
             <InputLabel shrink>
-              Mã bạn đọc
+              Mã sinh viên
             </InputLabel>
             <TextField
               id="outlined-basic"
               name='username'
               variant="outlined"
-              placeholder='Mã bạn đọc'
+              placeholder='Mã sinh viên'
               fullWidth={true}
               size="small"
               required
             onChange={onChangeNewUser}
             />
             <InputLabel shrink>
-              Họ tên bạn đọc
+              Họ tên sinh viên
             </InputLabel>
             <TextField
               id="outlined-basic"
               name='fullname'
               variant="outlined"
-              placeholder='Họ tên bạn đọc'
+              placeholder='Họ tên sinh viên'
+              fullWidth={true}
+              size="small"
+              onChange={onChangeNewUser}
+            />
+            <InputLabel shrink>
+              Lớp
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              name='classname'
+              variant="outlined"
+              placeholder='Lớp'
+              fullWidth={true}
+              size="small"
+              required
+              onChange={onChangeNewUser}
+            />
+            <InputLabel shrink>
+              Email
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              name='email'
+              variant="outlined"
+              placeholder='Email'
               fullWidth={true}
               size="small"
               onChange={onChangeNewUser}

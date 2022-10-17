@@ -19,6 +19,7 @@ const CategoryContextProvider = ({ children }) => {
 		count: 0,
 		category: null,
 		categories: [],
+		amountBooks: [],
 		categoriesLoading: true
 	});
 
@@ -42,7 +43,8 @@ const CategoryContextProvider = ({ children }) => {
 				const data = response.data.categories
 				const count = data.length;
 				const categories = data.slice(from, to);
-				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: { count, categories } })
+				const amountBooks = response.data.amountBooks;
+				dispatch({ type: CATEGORIES_LOADED_SUCCESS, payload: { count, categories, amountBooks } })
 			}
 		} catch (error) {
 			dispatch({ type: CATEGORIES_LOADED_FAIL })

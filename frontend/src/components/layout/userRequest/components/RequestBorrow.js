@@ -103,12 +103,14 @@ const RequestBorrow = () => {
                 <th>Số lượng</th>
                 <th>Ngày mượn</th>
                 <th>Trạng thái</th>
+                <th>Người duyệt</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               {
                 requests.map((request, index) => {
+                  { console.log(request) }
                   return (
                     <tr key={request._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
@@ -123,6 +125,7 @@ const RequestBorrow = () => {
                         <p className="text-rose-500">Đã từ chối</p>
                       }
                       </td>
+                      <td>{request.user_confirm?.fullname ? request.user_confirm?.fullname : ""}</td>
                       <td>
                         {
                           request.status === 'PENDING' ?

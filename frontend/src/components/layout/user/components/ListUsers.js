@@ -75,8 +75,10 @@ const ListUsers = () => {
             <thead className='border-b-2 border-solid border-border-color'>
               <tr>
                 <th>STT</th>
-                <th>Mã bạn đọc</th>
-                <th>Tên bạn đọc</th>
+                <th>Mã sinh viên</th>
+                <th>Tên sinh viên</th>
+                <th>Lớp</th>
+                <th>Email</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -87,8 +89,10 @@ const ListUsers = () => {
                     <tr key={user._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
                       <td>{user.username}</td>
-                      <td>{user.fullname ? user.fullname : "Chưa đặt tên, vui lòng cập nhật!"}</td>
-                      <td className='max-w-0'>
+                      <td>{user.fullname ? user.fullname : "Trống"}</td>
+                      <td>{user.classname ? user.classname: "Trống"}</td>
+                      <td>{user.email ? user.email: "Trống"}</td>
+                      <td>
                         <Button onClick={() => {setOpenDelete(true); setUserDelete(user._id)}} className='mr-2' size="small" color="error" variant="contained" startIcon={<DeleteIcon />}>
                           Xóa
                         </Button>
@@ -105,7 +109,7 @@ const ListUsers = () => {
           </table>
           {/* dialog confirm delete */}
           <Dialog open={openDelete} onClose={() => { setOpenDelete(false); setUserDelete(null) }}>
-            <DialogTitle id="alert-dialog-title">Xác nhận xóa bạn đọc?</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Xóa sinh viên sẽ xóa tất cả các yêu cầu của sinh viên này. Bạn chắc chắn muốn xóa?</DialogTitle>
             <DialogActions>
               <Button onClick={() => { setOpenDelete(false); setUserDelete(null) }}>Trở về</Button>
               <Button onClick={() => { handleDeleteUser() }} autoFocus>Đồng ý</Button>
@@ -157,6 +161,32 @@ const ListUsers = () => {
                     fullWidth={true}
                     size="small"
                     value={userUpdate.fullname}
+                    onChange={onChangeUpdateUser}
+                  />
+                  <InputLabel shrink>
+                    Lớp
+                  </InputLabel>
+                  <TextField
+                    id="outlined-basic"
+                    name='classname'
+                    variant="outlined"
+                    placeholder='Lớp'
+                    fullWidth={true}
+                    size="small"
+                    value={userUpdate.classname}
+                    onChange={onChangeUpdateUser}
+                  />
+                  <InputLabel shrink>
+                    Email
+                  </InputLabel>
+                  <TextField
+                    id="outlined-basic"
+                    name='email'
+                    variant="outlined"
+                    placeholder='Email'
+                    fullWidth={true}
+                    size="small"
+                    value={userUpdate.email}
                     onChange={onChangeUpdateUser}
                   />
                   <InputLabel shrink>

@@ -11,7 +11,8 @@ router.get('/admin/return', verifyTokenAdmin, async (req, res) => {
   try {
     const requests = await Request.find({type: 'RETURN'})
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
-      .populate('user', ['username', 'fullname']);
+      .populate('user', ['username', 'fullname'])
+      .populate('user_confirm', ['username', 'fullname']);
 
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
 
@@ -25,7 +26,8 @@ router.get('/admin/borrow', verifyTokenAdmin, async (req, res) => {
   try {
     const requests = await Request.find({type: 'BORROW'})
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
-      .populate('user', ['username', 'fullname']);
+      .populate('user', ['username', 'fullname'])
+      .populate('user_confirm', ['username', 'fullname']);
 
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
 
@@ -44,6 +46,7 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
       user,
       books,
       status: status || 'PENDING',
+      user_confirm: req.userId,
     };
     const requestUpdateCondition = { _id: req.params.id };
 
@@ -51,6 +54,7 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
       requestUpdateCondition, updatedRequest, { new: true }
     )
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
       
     if (!updatedRequest)
@@ -116,6 +120,7 @@ router.get('/borrow', verifyToken, async (req, res) => {
   try {
     const requests = await Request.find({ user: req.userId, type: 'BORROW' })
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
@@ -130,6 +135,7 @@ router.get('/return', verifyToken, async (req, res) => {
   try {
     const requests = await Request.find({ user: req.userId, type: 'RETURN' })
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
     if (!requests) return res.status(404).json({ success: false, message: 'Data not found' });
@@ -144,6 +150,7 @@ router.get('/:id', verifyToken, async (req, res) => {
   try {
     const request = await Request.find({ user: req.userId, _id: req.params.id })
       .populate('books', ['name'])
+      .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
     if (!request) return res.status(404).json({ success: false, message: 'Data not found' });
@@ -163,11 +170,13 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
     try {
       let updateType = { 
         type,
-        status: "PENDING"
+        user_confirm: null,
+        status: "PENDING",
       };
       const requestChangeCondition = { user: req.userId, _id: req.params.id };
       updateType = await Request.findOneAndUpdate(requestChangeCondition, updateType, { new: true })
         .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate('user_confirm', ['username', 'fullname'])
         .populate('user', ['username', 'fullname']);
 
       if (!updateType)
@@ -194,6 +203,7 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
         requestUpdateCondition, updatedRequest, { new: true }
       )
         .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate('user_confirm', ['username', 'fullname'])
         .populate('user', ['username', 'fullname']);
   
       if (!updatedRequest)

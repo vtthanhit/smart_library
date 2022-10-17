@@ -45,7 +45,7 @@ const RequestBorrow = () => {
 
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
-      <h5 className='rounded-t-lg p-6 mb-0'>Danh sách yêu cầu trả</h5>
+      <h5 className='rounded-t-lg p-6 mb-0'>Danh sách yêu cầu mượn</h5>
       <div className='p-6 pt-0 flex-auto'>
         <div className='whitespace-nowrap overflow-x-auto'>
           <table className='mb-0'>

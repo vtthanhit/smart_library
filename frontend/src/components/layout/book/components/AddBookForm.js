@@ -1,10 +1,12 @@
-import { Grid, Autocomplete, InputLabel, TextField, TextareaAutosize, Button } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { Grid, Autocomplete, InputLabel, TextField, TextareaAutosize, Button } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import { CategoryContext } from '../../../../contexts/CategoryContext';
 import { BookContext } from '../../../../contexts/BookContext';
 
 const AddBookForm = () => {
+  const navigate= useNavigate();
   const {
     categoryState: { categories },
     getAllCategories,
@@ -49,6 +51,13 @@ const AddBookForm = () => {
 
     const { success, message } = await addBook(addBookFormData);
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
+    if (success) {
+      navigate('/admin/book/list');
+      resetNewBook();
+    }
+  }
+
+  const resetNewBook = () => {
     setNewBook({
       name: '',
       author: '',
