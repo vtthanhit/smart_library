@@ -5,6 +5,7 @@ const router = express.Router();
 const { verifyTokenAdmin } = require('../middleware/auth');
 const { DEFAULT_USER_PASSWORD, REGEX_PASSWORD } = require('../constants/appConstants')
 const User = require('../models/User');
+const Request = require('../models/Request');
 
 router.get('/', verifyTokenAdmin, async (req, res) => {
   try {
@@ -17,10 +18,10 @@ router.get('/', verifyTokenAdmin, async (req, res) => {
 });
 
 router.post('/', verifyTokenAdmin, async (req, res) => {
-  const { username, fullname } = req.body;
+  const { username, fullname, classname, email, role } = req.body;
   const defaultPassword = DEFAULT_USER_PASSWORD;
   const hashPassword = await argon2.hash(defaultPassword);
-  if (!username) return res.status(400).json({ success: false, message: 'Mã người dùng là bắt buộc!' });
+  if (!username || !classname) return res.status(400).json({ success: false, message: 'Mã sinh viên và tên lớp là bắc buộc!' });
 
   try {
     const user = await User.findOne({ username });
@@ -30,8 +31,11 @@ router.post('/', verifyTokenAdmin, async (req, res) => {
 
     const newUser = new User({
       username,
+      classname,
       fullname: fullname ? fullname : username,
       password: hashPassword,
+      email,
+      role,
     });
     await newUser.save();
 
@@ -42,14 +46,12 @@ router.post('/', verifyTokenAdmin, async (req, res) => {
 });
 
 router.put('/:id', verifyTokenAdmin, async (req, res) => {
-  const { username, fullname, password } = req.body;
+  const { username, fullname, password, classname, email } = req.body;
   const regexPassword = REGEX_PASSWORD;
-  if(!username) {
-    return res.status(400).json({ success: false, message: 'Tên người dùng là bắt buộc!' });
+  
+  if(password && !password.match(regexPassword)) {
+    return res.status(400).json({ success: false, message: 'Sai định dạng mật khẩu' });
   }
-  // if(password && !password.match(regexPassword)) {
-  //   return res.status(400).json({ success: false, message: 'Sai định dạng mật khẩu' });
-  // }
   const hashPassword = await argon2.hash(password);
 
   try {
@@ -57,6 +59,8 @@ router.put('/:id', verifyTokenAdmin, async (req, res) => {
       username,
       fullname,
       password: hashPassword,
+      classname,
+      email,
     };
     const userUpdateCondition = { _id: req.params.id };
 
@@ -78,6 +82,7 @@ router.put('/:id', verifyTokenAdmin, async (req, res) => {
 router.delete('/:id', verifyTokenAdmin, async (req, res) => {
   try {
     const userDeleteCondition = { _id: req.params.id };
+    await Request.deleteMany({user: req.params.id});
     const deleteduser = await User.findByIdAndRemove(userDeleteCondition);
 
     if (!deleteduser)

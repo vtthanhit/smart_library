@@ -14,6 +14,13 @@ const UserSchema = new Schema({
   fullname: {
     type: String,
   },
+  classname: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ['ADMIN', 'STUDENT'],

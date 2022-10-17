@@ -44,6 +44,7 @@ const RequestReturn = () => {
                 <th>Số lượng</th>
                 <th>Ngày trả</th>
                 <th>Trạng thái</th>
+                <th>Người duyệt</th>
               </tr>
             </thead>
             <tbody>
@@ -63,6 +64,7 @@ const RequestReturn = () => {
                         <p className="text-rose-500">Đã từ chối</p>
                       }
                       </td>
+                      <td>{request.user_confirm?.fullname ? request.user_confirm?.fullname : ""}</td>
                     </tr>
                   )
                 })

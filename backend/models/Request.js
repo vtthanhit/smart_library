@@ -25,6 +25,11 @@ const RequestSchema = new Schema({
     type: String,
     enum: ['PENDING', 'ACCEPT', 'REJECT'],
     default: 'PENDING',
+  },
+  user_confirm: {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+    default: null,
   }
 }, { timestamps: true });
 

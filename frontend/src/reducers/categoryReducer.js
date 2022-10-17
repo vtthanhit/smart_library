@@ -15,12 +15,14 @@ export const categoryReducer = (state, action) => {
       return {
         ...state,
         categories: payload.categories,
+        amountBooks: payload.amountBooks,
       }
 
     case CATEGORIES_LOADED_SUCCESS:
       return {
         ...state,
         categories: payload.categories,
+        amountBooks: payload.amountBooks,
         count: payload.count,
         categoriesLoading: false,
       }
@@ -29,6 +31,7 @@ export const categoryReducer = (state, action) => {
       return {
         ...state,
         categories: [],
+        amountBooks: [],
         categoriesLoading: false,
       }
 

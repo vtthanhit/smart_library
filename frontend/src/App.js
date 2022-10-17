@@ -22,6 +22,7 @@ import UserRequestBorrow from './components/layout/userRequest/UserRequestBorrow
 import UserRequestReturn from './components/layout/userRequest/UserRequestReturn';
 import AdminRequestReturn from './components/layout/adminRequest/AdminRequestReturn';
 import AdminRequestBorrow from './components/layout/adminRequest/AdminRequestBorrow';
+import Profile from './components/layout/auth';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path='/login' element={<Login/>} />
         <Route element={<PrivateRoutes/>} >
           <Route element={<Home/>}>
+            <Route path='/profile' element={<Profile/>} />
             <Route path='/index' element={
               <CategoryContextProvider>
                 <BookContextProvider>

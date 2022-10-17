@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 function Profile() {
   const [open, setOpen] = useState(false);
@@ -88,7 +89,9 @@ function Profile() {
                     onKeyDown={handleListKeyDown}
                     className='text-body-color'
                   >
-                    <MenuItem onClick={handleClose}>Thông tin tài khoản</MenuItem>
+                    <Link to={'/profile'}>
+                      <MenuItem onClick={handleClose}>Thông tin tài khoản</MenuItem>
+                    </Link>
                     <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

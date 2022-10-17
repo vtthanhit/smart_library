@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { verifyTokenAdmin } = require('../middleware/auth');
 
+const Book = require('../models/Book');
 const Category = require('../models/Category');
 
 router.post('/', verifyTokenAdmin, async (req, res) => {
@@ -28,9 +29,18 @@ router.post('/', verifyTokenAdmin, async (req, res) => {
 
 router.get('/', verifyTokenAdmin, async (req, res) => {
   try {
+    const amountBooks = await Book.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          totalAmount: {$sum: "$quantity"},
+        }
+      },
+    ]);
+
     const categories = await Category.find();
 
-    return res.status(200).json({ success: true, categories });
+    return res.status(200).json({ success: true, categories, amountBooks });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Internal SERVER!' });
   }
@@ -63,6 +73,7 @@ router.put('/:id', verifyTokenAdmin, async (req, res) => {
 router.delete('/:id', verifyTokenAdmin, async (req, res) => {
   try {
     const categoryDeleteCondition = { _id: req.params.id };
+    await Book.deleteMany({category: req.params.id});
     const deletedCategory = await Category.findByIdAndRemove(categoryDeleteCondition);
 
     if (!deletedCategory)
