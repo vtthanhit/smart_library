@@ -11,6 +11,7 @@ import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import ImportContactsOutlinedIcon from '@mui/icons-material/ImportContactsOutlined';
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 export const menuData = [
   {
@@ -25,6 +26,11 @@ export const menuData = [
     iconOpened: <KeyboardArrowDownIcon fontSize='small' />,
     iconClosed: <KeyboardArrowRightIcon fontSize='small' />,
     subMenu: [
+      {
+        title: 'Tạo yêu cầu',
+        path: '/admin/request/add_new',
+        icon: <NoteAddIcon fontSize='small' />,
+      },
       {
         title: 'Yêu cầu mượn',
         path: '/admin/request/borrow',

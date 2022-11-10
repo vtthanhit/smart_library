@@ -8,6 +8,8 @@ import {
 	USERS_LOADED_FAIL,
 	DELETE_USER,
 	UPDATE_USER,
+	ALL_USER,
+	FIND_USER,
 } from './constants';
 import { userReducer } from '../reducers/userReducer';
 
@@ -42,6 +44,32 @@ const UserContextProvider = ({ children }) => {
 				const count = data.length;
 				const users = data.slice(from, to);
 				dispatch({ type: USERS_LOADED_SUCCESS, payload: { count, users } })
+			}
+		} catch (error) {
+			dispatch({ type: USERS_LOADED_FAIL })
+		}
+	}
+
+	const getAllUsers = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/user`);
+			if (response.data.success) {
+				const users = response.data.users
+				dispatch({ type: ALL_USER, payload: { users } })
+			}
+		} catch (error) {
+			dispatch({ type: USERS_LOADED_FAIL })
+		}
+	}
+
+	// find user
+	const findUser = async (username) => {
+		console.log(typeof username)
+		try {
+			const response = await axios.get(`${apiUrl}/user/${username}`);
+			if (response.data.success) {
+				const user = response.data.user
+				dispatch({ type: FIND_USER, payload: { user } })
 			}
 		} catch (error) {
 			dispatch({ type: USERS_LOADED_FAIL })
@@ -95,6 +123,8 @@ const UserContextProvider = ({ children }) => {
   const userContextData = {
 		userState,
 		getUsers,
+		findUser,
+		getAllUsers,
     addUser,
 		showToast,
 		setShowToast,

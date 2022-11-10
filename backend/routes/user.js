@@ -17,6 +17,18 @@ router.get('/', verifyTokenAdmin, async (req, res) => {
   }
 });
 
+// find a user
+router.get('/:username', verifyTokenAdmin, async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    console.log(user)
+
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 router.post('/', verifyTokenAdmin, async (req, res) => {
   const { username, fullname, classname, email, role } = req.body;
   const defaultPassword = DEFAULT_USER_PASSWORD;
@@ -48,7 +60,7 @@ router.post('/', verifyTokenAdmin, async (req, res) => {
 router.put('/:id', verifyTokenAdmin, async (req, res) => {
   const { username, fullname, password, classname, email } = req.body;
   const regexPassword = REGEX_PASSWORD;
-  
+
   if(password && !password.match(regexPassword)) {
     return res.status(400).json({ success: false, message: 'Sai định dạng mật khẩu' });
   }
