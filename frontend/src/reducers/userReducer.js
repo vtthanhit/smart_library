@@ -4,12 +4,19 @@ import {
   USERS_LOADED_FAIL,
   DELETE_USER,
   UPDATE_USER,
+  ALL_USER,
 } from '../contexts/constants';
 
 export const userReducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case ALL_USER:
+      return {
+        ...state,
+        users: payload.users,
+      }
+
     case USERS_LOADED_SUCCESS:
       return {
         ...state,

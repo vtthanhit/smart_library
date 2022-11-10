@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Button, Dialog, DialogTitle, DialogActions, Pagination } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import { useSearchParams } from "react-router-dom";
 
 import Loading from '../../Loading';
 import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
@@ -19,6 +20,10 @@ const ListBooks = () => {
     setShowToast,
   } = useContext(BookContext);
 
+  let [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q");
+  console.log(query);
+
   const [openDelete, setOpenDelete] = useState(false);
   const [bookDelete, setBookDelete] = useState(null);
 
@@ -33,7 +38,7 @@ const ListBooks = () => {
     const { success, message } = await deleteBook(bookDelete);
     if (success) {
       setPagination({...pagination, count: count - 1});
-      getBooks(pagination.from, pagination.to);
+      getBooks(query, pagination.from, pagination.to);
     }
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     setOpenDelete(false);
@@ -42,8 +47,8 @@ const ListBooks = () => {
 
   useEffect(() => {
     setPagination({ ...pagination, count });
-    getBooks(pagination.from, pagination.to);
-  }, [pagination.from, pagination.to, count]);
+    getBooks(query, pagination.from, pagination.to);
+  }, [pagination.from, pagination.to, count, query]);
 
   if (booksLoading) {
     return <Loading />

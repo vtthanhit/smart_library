@@ -23,6 +23,8 @@ import UserRequestReturn from './components/layout/userRequest/UserRequestReturn
 import AdminRequestReturn from './components/layout/adminRequest/AdminRequestReturn';
 import AdminRequestBorrow from './components/layout/adminRequest/AdminRequestBorrow';
 import Profile from './components/layout/auth';
+import AdminBookCard from './components/layout/adminBookCard';
+import AdminAddRequest from './components/layout/adminRequest/AdminAddRequest';
 
 function App() {
   return (
@@ -67,10 +69,20 @@ function App() {
           </Route>
         </Route>
         <Route element={<AdminPrivateRoute />} >
-          <Route path='/admin' element={<Admin/>}>
-            <Route path='category' element={<CategoryContextProvider><Categories /></CategoryContextProvider>} />
-            <Route path='user' element={<UserContextProvider><Users /></UserContextProvider>} />
-            <Route path='book'>
+          <Route element={<Admin/>}>
+            <Route path='/admin' element={
+              <CategoryContextProvider>
+                <BookContextProvider>
+                  <RequestContextProvider>
+                    <AdminBookCard/>
+                  </RequestContextProvider>
+                </BookContextProvider>
+              </CategoryContextProvider>
+            }
+            />
+            <Route path='/admin/category' element={<CategoryContextProvider><Categories /></CategoryContextProvider>} />
+            <Route path='/admin/user' element={<UserContextProvider><Users /></UserContextProvider>} />
+            <Route path='/admin/book'>
               <Route path='add' element={
                 <CategoryContextProvider>
                   <BookContextProvider>
@@ -91,7 +103,16 @@ function App() {
                 </BookContextProvider>
               } />
             </Route>
-            <Route path='request'>
+            <Route path='/admin/request'>
+              <Route path='add_new' element={
+                <CategoryContextProvider>
+                  <BookContextProvider>
+                    <RequestContextProvider>
+                      <AdminAddRequest/>
+                    </RequestContextProvider>
+                  </BookContextProvider>
+                </CategoryContextProvider>
+              } />
               <Route path='return' element={
                 <CategoryContextProvider>
                   <BookContextProvider>

@@ -15,6 +15,7 @@ export const USERS_LOADED_FAIL = 'USERS_LOADED_FAIL'
 export const DELETE_USER = 'DELETE_USER'
 export const UPDATE_USER = 'UPDATE_USER'
 export const FIND_USER = 'FIND_USER'
+export const ALL_USER = 'ALL_USER'
 
 export const ADD_BOOK = 'ADD_BOOK'
 export const DELETE_BOOK = 'DELETE_BOOK'

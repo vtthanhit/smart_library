@@ -8,6 +8,7 @@ import {
 	USERS_LOADED_FAIL,
 	DELETE_USER,
 	UPDATE_USER,
+	ALL_USER,
 } from './constants';
 import { userReducer } from '../reducers/userReducer';
 
@@ -47,6 +48,19 @@ const UserContextProvider = ({ children }) => {
 			dispatch({ type: USERS_LOADED_FAIL })
 		}
 	}
+
+	const getAllUsers = async () => {
+		try {
+			const response = await axios.get(`${apiUrl}/user`);
+			if (response.data.success) {
+				const users = response.data.users
+				dispatch({ type: ALL_USER, payload: { users } })
+			}
+		} catch (error) {
+			dispatch({ type: USERS_LOADED_FAIL })
+		}
+	}
+
 
 	// Add user
 	const addUser = async newUser => {
@@ -95,6 +109,7 @@ const UserContextProvider = ({ children }) => {
   const userContextData = {
 		userState,
 		getUsers,
+		getAllUsers,
     addUser,
 		showToast,
 		setShowToast,
