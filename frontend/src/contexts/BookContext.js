@@ -55,9 +55,9 @@ const BookContextProvider = ({ children }) => {
 	}
 
 	// Get all book with paginate
-	const getBooks = async (from, to) => {
+	const getBooks = async (query, from, to) => {
 		try {
-			const response = await axios.get(`${apiUrl}/book`);
+			const response = await axios.get(`${apiUrl}/book?q=${query}`);
 			if (response.data.success) {
 				const data = response.data.books
 				const count = data.length;

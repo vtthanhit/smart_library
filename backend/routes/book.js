@@ -66,7 +66,12 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const books = await Book.find().populate("category", ["name"]);
+    let books;
+    if (req.query.q !== 'null') {
+      books = await Book.find({ name: { $regex: `.*${req.query.q}.*`, $options: 'i' }}).populate("category", ["name"]);
+    } else {
+      books = await Book.find().populate("category", ["name"]);
+    }
 
     return res.status(200).json({ success: true, books });
   } catch (error) {
