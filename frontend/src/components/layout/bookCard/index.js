@@ -1,11 +1,10 @@
 import React, { useEffect, useContext } from 'react'
 import { Grid, Pagination } from '@mui/material'
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useSearchParams } from "react-router-dom";
 
 import Breadcrumbs from '../Breadcrumbs';
 import { BookContext } from '../../../contexts/BookContext';
@@ -16,6 +15,10 @@ import { RequestContext } from '../../../contexts/RequestContext';
 import ToastMessage from './components/ToastMessage';
 
 const BookCard = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q");
+  console.log(query)
+
   const {
     bookState: { count, books, booksLoading },
     getBooks,
@@ -38,8 +41,8 @@ const BookCard = () => {
 
   useEffect(() => {
     setPagination({ ...pagination, count });
-    getBooks(pagination.from, pagination.to);
-  }, [pagination.from, pagination.to, count]);
+    getBooks(query, pagination.from, pagination.to);
+  }, [pagination.from, pagination.to, count, query]);
 
   if (booksLoading) {
     return <Loading />
@@ -92,9 +95,6 @@ const BookCard = () => {
                         Số lượng: {book.quantity}
                       </Typography>
                     </CardContent>
-                    <CardActions>
-                      <Button onClick={() => addNow(book._id)} size="small">Thuê ngay</Button>
-                    </CardActions>
                   </Card>
                 </Grid>
               )
