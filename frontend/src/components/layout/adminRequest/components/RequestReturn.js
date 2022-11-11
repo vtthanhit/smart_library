@@ -57,7 +57,6 @@ const RequestReturn = () => {
                 <th>Ngày trả</th>
                 <th>Trạng thái</th>
                 <th>Người trả</th>
-                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -78,21 +77,11 @@ const RequestReturn = () => {
                       }
                       </td>
                       <td>{request.user.fullname}</td>
-                      <td>
-                        {
-                          request.status === 'PENDING' ?
-                          (<Button onClick={() => handleUpdateRequest(request._id)} className='mr-2' size="small" color="info" variant="contained">
-                            Chấp nhận
-                          </Button>) :
-                          null
-                        }
-                      </td>
                     </tr>
                   )
                 })
               }
             </tbody>
-
           </table>
 
           {/* pagination */}

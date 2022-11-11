@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import moment from 'moment'
 
 import Loading from '../../Loading';
@@ -8,10 +9,14 @@ import { RequestContext } from '../../../../contexts/RequestContext';
 import { PAGY_PAGE_SIZE } from '../../../../contexts/constants';
 
 const RequestBorrow = () => {
+  const [openReturn, setOpenReturn] = useState(false);
+  const [requestUpdate, setRequestUpdate] = useState();
+
   const {
     requestState: { count, requests, reuqestsLoading },
     getAdminRequestBorrow,
     adminUpdateRequest,
+    returnRequest,
     pagination,
     setPagination,
     setShowToast,
@@ -34,14 +39,17 @@ const RequestBorrow = () => {
   }
 
   let status = '';
-  const handleUpdateRequest = async (requestId, status) => {
-    const statusChange = {status}
-    const { success, message } = await adminUpdateRequest(requestId, statusChange);
+  const handleReturn = async () => {
+    const type = { type: "RETURN" };
+    const { success, message } = await returnRequest(requestUpdate, type);
     if (success) {
       getAdminRequestBorrow(pagination.from, pagination.to)
     }
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
+    setOpenReturn(false);
   }
+
+  console.log(requests)
 
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
@@ -56,8 +64,9 @@ const RequestBorrow = () => {
                 <th>Tác giả</th>
                 <th>Số lượng</th>
                 <th>Ngày mượn</th>
-                <th>Trạng thái</th>
+                <th>Hạn trả</th>
                 <th>Người mượn</th>
+                <th>Duyệt bởi</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -70,30 +79,16 @@ const RequestBorrow = () => {
                       <td>{request.books.book.name}</td>
                       <td>{request.books.book.author}</td>
                       <td>{request.books.quantity}</td>
-                      <td>{moment(request.updatedAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
-                      <td>{request.status === 'PENDING' ?
-                        <p className="text-lime-500">Chờ xác nhận</p> :
-                        request.status === 'ACCEPT' ?
-                        <p className="text-cyan-500">Đã xác nhận</p> :
-                        <p className="text-rose-500">Đã từ chối</p>
-                      }
-                      </td>
-                      <td>{request.user.fullname}</td>
+                      <td>{moment(request.createdAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
                       <td>
-                        {
-                          request.status === 'PENDING' ?
-                          (
-                            <>
-                              <Button onClick={() => handleUpdateRequest(request._id, status = 'ACCEPT')} className='mr-2' size="small" color="info" variant="contained">
-                                Chấp nhận
-                              </Button>
-                              <Button onClick={() => handleUpdateRequest(request._id, status = 'REJECT')} className='mr-2' size="small" color="error" variant="contained">
-                                Từ chối
-                              </Button>
-                            </>
-                          ) :
-                          null
-                        }
+                        {moment(request.dueDate, "YYYY-MM-DD").format("DD-MM-YYYY")}
+                      </td>
+                      <td>{`${request.user?.username} - ${request.user?.fullname}`}</td>
+                      <td>{request.user_confirm.fullname}</td>
+                      <td>
+                        <Button onClick={() => {setOpenReturn(true); setRequestUpdate(request._id)}} size="small" color="info" variant="contained" startIcon={<KeyboardReturnIcon />}>
+                          Trả
+                        </Button>
                       </td>
                     </tr>
                   )
@@ -102,6 +97,14 @@ const RequestBorrow = () => {
             </tbody>
 
           </table>
+
+          <Dialog open={openReturn} onClose={() => { setOpenReturn(false); }}>
+            <DialogTitle id="alert-dialog-title">Xác nhận trả sách?</DialogTitle>
+            <DialogActions>
+              <Button onClick={() => { setOpenReturn(false); }}>Trở về</Button>
+              <Button onClick={() => { handleReturn(); setRequestUpdate(null) }} autoFocus>Đồng ý</Button>
+            </DialogActions>
+          </Dialog>
 
           {/* pagination */}
           <Pagination

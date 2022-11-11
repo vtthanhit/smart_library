@@ -142,6 +142,21 @@ const RequestContextProvider = ({ children }) => {
 	}	
 
 	// Update request
+	const returnRequest = async (requestId, type) => {
+		try {
+			const response = await axios.put(`${apiUrl}/request/admin/return_book/${requestId}`, type);
+			if (response.data.success) {
+				dispatch({ type: UPDATE_REQUEST, payload: response.data.request })
+				return response.data
+			}
+		} catch (error) {
+			return error.response.data
+			? error.response.data
+			: { success: false, message: 'Server error' }
+		}
+	}	
+
+	// Update request
 	const adminUpdateRequest = async (requestId, updatedRequest) => {
 		try {
 			const response = await axios.put(`${apiUrl}/request/admin/${requestId}`, updatedRequest);
@@ -164,6 +179,7 @@ const RequestContextProvider = ({ children }) => {
 		getAdminRequestReturn,
 		getAdminRequestBorrow,
 		updateRequest,
+		returnRequest,
 		adminUpdateRequest,
 		addRequest,
 		showToast,
