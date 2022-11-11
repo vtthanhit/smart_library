@@ -77,6 +77,35 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
   }
 });
 
+// Tra sach
+router.put('/admin/return_book/:id', verifyTokenAdmin, async (req, res) => {
+  const { type } = req.body;
+  console.log(type)
+  try {
+    let updatedRequest = { type };
+    const requestUpdateCondition = { _id: req.params.id };
+    updatedRequest = await Request.findOneAndUpdate(
+      requestUpdateCondition, updatedRequest, { new: true }
+    )
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate('user_confirm', ['username', 'fullname'])
+      .populate('user', ['username', 'fullname']);
+
+    console.log(updatedRequest)
+    if (!updatedRequest)
+      return res.status(404).json({ success: false, message: 'Data not found' });
+
+    const book = await Book.findById(updatedRequest.books.book);
+    await Book.findByIdAndUpdate({_id: updatedRequest.books.book._id}, { quantity: book.quantity + updatedRequest.books.quantity }, { new: true });
+    return res.status(201).json({
+      success: true,
+      message: 'Trả sách thành công!', request: updatedRequest,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
   try {
     const requestDeleteCondition = { _id: req.params.id };

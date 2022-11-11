@@ -79,13 +79,6 @@ const RequestReturn = () => {
                       </td>
                       <td>{request.user.fullname}</td>
                       <td>
-                        {
-                          request.status === 'PENDING' ?
-                          (<Button onClick={() => handleUpdateRequest(request._id)} className='mr-2' size="small" color="info" variant="contained">
-                            Chấp nhận
-                          </Button>) :
-                          null
-                        }
                       </td>
                     </tr>
                   )
