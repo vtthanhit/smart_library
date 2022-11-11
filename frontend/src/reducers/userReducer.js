@@ -5,6 +5,7 @@ import {
   DELETE_USER,
   UPDATE_USER,
   ALL_USER,
+  FIND_USER,
 } from '../contexts/constants';
 
 export const userReducer = (state, action) => {
@@ -15,6 +16,12 @@ export const userReducer = (state, action) => {
       return {
         ...state,
         users: payload.users,
+      }
+
+    case FIND_USER:
+      return {
+        ...state,
+        user: payload.user,
       }
 
     case USERS_LOADED_SUCCESS:

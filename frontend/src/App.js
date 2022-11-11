@@ -105,13 +105,15 @@ function App() {
             </Route>
             <Route path='/admin/request'>
               <Route path='add_new' element={
-                <CategoryContextProvider>
-                  <BookContextProvider>
-                    <RequestContextProvider>
-                      <AdminAddRequest/>
-                    </RequestContextProvider>
-                  </BookContextProvider>
-                </CategoryContextProvider>
+                <UserContextProvider>
+                  <CategoryContextProvider>
+                    <BookContextProvider>
+                      <RequestContextProvider>
+                        <AdminAddRequest/>
+                      </RequestContextProvider>
+                    </BookContextProvider>
+                  </CategoryContextProvider>
+                </UserContextProvider>
               } />
               <Route path='return' element={
                 <CategoryContextProvider>

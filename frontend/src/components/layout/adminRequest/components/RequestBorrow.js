@@ -55,7 +55,7 @@ const RequestBorrow = () => {
                 <th>Tên sách</th>
                 <th>Tác giả</th>
                 <th>Số lượng</th>
-                <th>Ngày trả</th>
+                <th>Ngày mượn</th>
                 <th>Trạng thái</th>
                 <th>Người mượn</th>
                 <th>Hành động</th>

@@ -9,6 +9,7 @@ import {
 	DELETE_USER,
 	UPDATE_USER,
 	ALL_USER,
+	FIND_USER,
 } from './constants';
 import { userReducer } from '../reducers/userReducer';
 
@@ -61,6 +62,19 @@ const UserContextProvider = ({ children }) => {
 		}
 	}
 
+	// find user
+	const findUser = async (username) => {
+		console.log(typeof username)
+		try {
+			const response = await axios.get(`${apiUrl}/user/${username}`);
+			if (response.data.success) {
+				const user = response.data.user
+				dispatch({ type: FIND_USER, payload: { user } })
+			}
+		} catch (error) {
+			dispatch({ type: USERS_LOADED_FAIL })
+		}
+	}
 
 	// Add user
 	const addUser = async newUser => {
@@ -109,6 +123,7 @@ const UserContextProvider = ({ children }) => {
   const userContextData = {
 		userState,
 		getUsers,
+		findUser,
 		getAllUsers,
     addUser,
 		showToast,
