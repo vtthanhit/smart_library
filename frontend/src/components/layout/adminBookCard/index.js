@@ -4,6 +4,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
 import { useSearchParams } from "react-router-dom";
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -14,7 +16,7 @@ import { covertImageBase64 } from '../book/covertImageBase64';
 import { RequestContext } from '../../../contexts/RequestContext';
 import ToastMessage from './components/ToastMessage';
 
-const BookCard = () => {
+const AdminBookCard = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q");
 
@@ -45,6 +47,15 @@ const BookCard = () => {
 
   if (booksLoading) {
     return <Loading />
+  }
+
+  const addNow = async (bookId) => {
+    const book = { books: {book: bookId, quantity: 1} }
+    const { success, message } = await addRequest(book);
+    if (success) {
+      getBooks(pagination.from, pagination.to);
+    }
+    setShowToast({ open: true, message, type: success ? 'success' : 'error' });
   }
 
   return (
@@ -85,6 +96,9 @@ const BookCard = () => {
                         Số lượng: {book.quantity}
                       </Typography>
                     </CardContent>
+                    <CardActions>
+                      <Button onClick={() => addNow(book._id)} size="small">Cho thuê ngay</Button>
+                    </CardActions>
                   </Card>
                 </Grid>
               )
@@ -103,4 +117,4 @@ const BookCard = () => {
   )
 }
 
-export default BookCard
+export default AdminBookCard

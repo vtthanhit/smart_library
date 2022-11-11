@@ -99,10 +99,9 @@ const RequestContextProvider = ({ children }) => {
 	}
 
   // Create request borrow
-  const addRequest = async book => {
+  const addRequest = async request => {
     try {
-			const response = await axios.post(`${apiUrl}/request/borrow`, book);
-			console.log(response);
+			const response = await axios.post(`${apiUrl}/request/borrow`, request);
 			if (response.data.success) {
 				dispatch({ type: ADD_REQUEST, payload: response.data.request })
 				return response.data

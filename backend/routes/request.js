@@ -4,9 +4,9 @@ const { verifyToken, verifyTokenAdmin } = require('../middleware/auth');
 
 const Request = require('../models/Request');
 const Book = require("../models/Book");
+const User = require("../models/User");
 
 // admin
-
 router.get('/admin/return', verifyTokenAdmin, async (req, res) => {
   try {
     const requests = await Request.find({type: 'RETURN'})
@@ -56,7 +56,7 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
       .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
-      
+
     if (!updatedRequest)
       return res.status(404).json({ success: false, message: 'Data not found' });
 
@@ -93,24 +93,25 @@ router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
   }
 });
 
-// student
+router.post('/borrow', verifyTokenAdmin, async (req, res) => {
+  const { books, user } = req.body;
 
-router.post('/borrow', verifyToken, async (req, res) => {
-  const { books } = req.body;
   if (!books.book) return res.json({ success: false, message: 'You need to choose the book you want to borrow.' });
+
   try {
     const newRequest = new Request({
-      user: req.userId,
+      user,
       books: {
         book: books.book,
         quantity: books.quantity,
       },
       type: 'BORROW',
+      status: 'ACCEPT',
     });
     await newRequest.save();
     const book = await Book.findById(req.body.books.book);
     await Book.findByIdAndUpdate({_id: req.body.books.book}, { quantity: book.quantity - books.quantity }, { new: true });
-    return res.json({ success: true, message: 'Create new request successfully', request: newRequest });
+    return res.json({ success: true, message: 'Cho mượn sách thành công', request: newRequest });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -168,7 +169,7 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
 
   if (type) {
     try {
-      let updateType = { 
+      let updateType = {
         type,
         user_confirm: null,
         status: "PENDING",
@@ -198,17 +199,17 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
         },
       };
       const requestUpdateCondition = { user: req.userId, _id: req.params.id };
-  
+
       updatedRequest = await Request.findOneAndUpdate(
         requestUpdateCondition, updatedRequest, { new: true }
       )
         .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
         .populate('user_confirm', ['username', 'fullname'])
         .populate('user', ['username', 'fullname']);
-  
+
       if (!updatedRequest)
         return res.status(404).json({ success: false, message: 'Data not found' });
-      
+
       const book = await Book.findById(req.body.books.book);
       await Book.findByIdAndUpdate({_id: req.body.books.book}, { quantity: book.quantity + currentQuantity - books.quantity }, { new: true });
       return res.status(201).json({
