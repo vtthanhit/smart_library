@@ -64,7 +64,6 @@ const UserContextProvider = ({ children }) => {
 
 	// find user
 	const findUser = async (username) => {
-		console.log(typeof username)
 		try {
 			const response = await axios.get(`${apiUrl}/user/${username}`);
 			if (response.data.success) {

@@ -92,8 +92,6 @@ const AddRequestModal = () => {
     ])
   }
 
-  console.log(grid)
-
   return (
     <div>
       <Button onClick={handleOpen} className='bg-primary' variant="contained" startIcon={<AddIcon />}>

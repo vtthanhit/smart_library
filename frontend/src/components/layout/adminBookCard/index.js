@@ -87,13 +87,15 @@ const AdminBookCard = () => {
                       <Typography variant="body2" color="text.secondary">
                         {book.description}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      {book.quantity > 0 ? (<Typography variant="body2" color="text.secondary">
                         Số lượng: {book.quantity}
-                      </Typography>
+                      </Typography>) : (<Typography variant="body2" className='text-red-700'>
+                        Hết sách
+                      </Typography>)}
                     </CardContent>
-                    <CardActions>
+                    {book.quantity > 0 ? (<CardActions>
                       <Button onClick={() => navigate('/admin/request/add_new', {state: {book}})} size="small">Cho thuê ngay</Button>
-                    </CardActions>
+                    </CardActions>) : null}
                   </Card>
                 </Grid>
               )

@@ -49,8 +49,6 @@ const RequestBorrow = () => {
     setOpenReturn(false);
   }
 
-  console.log(requests)
-
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
       <h5 className='rounded-t-lg p-6 mb-0'>Danh sách yêu cầu mượn</h5>

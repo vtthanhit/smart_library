@@ -80,7 +80,6 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
 // Tra sach
 router.put('/admin/return_book/:id', verifyTokenAdmin, async (req, res) => {
   const { type } = req.body;
-  console.log(type)
   try {
     let updatedRequest = { type };
     const requestUpdateCondition = { _id: req.params.id };
@@ -91,7 +90,6 @@ router.put('/admin/return_book/:id', verifyTokenAdmin, async (req, res) => {
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
-    console.log(updatedRequest)
     if (!updatedRequest)
       return res.status(404).json({ success: false, message: 'Data not found' });
 

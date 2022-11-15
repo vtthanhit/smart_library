@@ -12,19 +12,19 @@ export const userMenuData = [
     icon: <DashboardIcon fontSize='small' />,
   },
   {
-    title: 'Quản lý yêu cầu',
+    title: 'Quản lý cá nhân',
     path: '#',
     icon: <ArticleOutlinedIcon fontSize='small' />,
     iconOpened: <KeyboardArrowDownIcon fontSize='small' />,
     iconClosed: <KeyboardArrowRightIcon fontSize='small' />,
     subMenu: [
       {
-        title: 'Yêu cầu mượn',
+        title: 'Sách đã mượn',
         path: '/borrow',
         icon: <AssignmentTurnedInOutlinedIcon fontSize='small' />,
       },
       {
-        title: 'Yêu cầu trả',
+        title: 'Sách đã trả',
         path: '/return',
         icon: <AutorenewOutlinedIcon fontSize='small' />,
       },

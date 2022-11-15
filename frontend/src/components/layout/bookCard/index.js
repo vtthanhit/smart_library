@@ -81,9 +81,11 @@ const BookCard = () => {
                       <Typography variant="body2" color="text.secondary">
                         {book.description}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      {book.quantity > 0 ? (<Typography variant="body2" color="text.secondary">
                         Số lượng: {book.quantity}
-                      </Typography>
+                      </Typography>) : (<Typography variant="body2" className='text-red-700'>
+                        Hết sách
+                      </Typography>)}
                     </CardContent>
                   </Card>
                 </Grid>
