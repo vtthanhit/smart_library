@@ -102,15 +102,13 @@ const RequestBorrow = () => {
                 <th>Tác giả</th>
                 <th>Số lượng</th>
                 <th>Ngày mượn</th>
-                <th>Trạng thái</th>
-                <th>Người duyệt</th>
-                <th>Hành động</th>
+                <th>Hạn trả</th>
+                <th>Duyệt bởi</th>
               </tr>
             </thead>
             <tbody>
               {
                 requests.map((request, index) => {
-                  { console.log(request) }
                   return (
                     <tr key={request._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
@@ -118,34 +116,10 @@ const RequestBorrow = () => {
                       <td>{request.books.book.author}</td>
                       <td>{request.books.quantity}</td>
                       <td>{moment(request.createdAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
-                      <td>{request.status === 'PENDING' ?
-                        <p className="text-lime-500">Chờ xác nhận</p> :
-                        request.status === 'ACCEPT' ?
-                        <p className="text-cyan-500">Đã xác nhận</p> :
-                        <p className="text-rose-500">Đã từ chối</p>
-                      }
+                      <td>
+                        {moment(request.dueDate, "YYYY-MM-DD").format("DD-MM-YYYY")}
                       </td>
                       <td>{request.user_confirm?.fullname ? request.user_confirm?.fullname : ""}</td>
-                      <td>
-                        {
-                          request.status === 'PENDING' ?
-                          (<Button onClick={() => {setOpenDelete(true); setRequestDelete(request._id)}} className='mr-2' size="small" color="error" variant="contained" startIcon={<DeleteIcon />}>
-                            Huỷ
-                          </Button>) :
-                          null
-                        }
-                        {
-                          request.status === 'PENDING' ?
-                          (<Button onClick={() => {setOpenUpdate(true); setRequestUpdate(request._id)}} size="small" color="info" variant="contained" startIcon={<ModeEditOutlineIcon />}>
-                            Cập nhật
-                          </Button>) :
-                          request.status === 'ACCEPT' ?
-                          (<Button onClick={() => {setOpenReturn(true); setRequestUpdate(request._id)}} size="small" color="info" variant="contained" startIcon={<KeyboardReturnIcon />}>
-                            Trả
-                          </Button>) :
-                          null
-                        }
-                      </td>
                     </tr>
                   )
                 })

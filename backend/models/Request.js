@@ -23,12 +23,16 @@ const RequestSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['PENDING', 'ACCEPT', 'REJECT'],
-    default: 'PENDING',
+    enum: ['ACCEPT', 'OVERDUE'],
+    default: 'ACCEPT',
   },
   user_confirm: {
     type: Schema.Types.ObjectId,
     ref: 'users',
+    default: null,
+  },
+  dueDate: {
+    type: Date,
     default: null,
   }
 }, { timestamps: true });

@@ -22,7 +22,6 @@ const ListBooks = () => {
 
   let [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q");
-  console.log(query);
 
   const [openDelete, setOpenDelete] = useState(false);
   const [bookDelete, setBookDelete] = useState(null);
