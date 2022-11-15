@@ -128,6 +128,8 @@ router.post('/borrow', verifyTokenAdmin, async (req, res) => {
   if (!books.book) return res.json({ success: false, message: 'You need to choose the book you want to borrow.' });
 
   try {
+    const date = new Date();
+    date.setDate(date.getDate() + 15)
     const newRequest = new Request({
       user,
       books: {
@@ -136,6 +138,8 @@ router.post('/borrow', verifyTokenAdmin, async (req, res) => {
       },
       type: 'BORROW',
       status: 'ACCEPT',
+      user_confirm: req.userId,
+      dueDate: date,
     });
     await newRequest.save();
     const book = await Book.findById(req.body.books.book);

@@ -1,19 +1,23 @@
-import { Grid, Autocomplete, InputLabel, TextField, TextareaAutosize, Button } from '@mui/material';
+import { Grid, Autocomplete, InputLabel, TextField, Button } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
+import { useLocation } from "react-router-dom";
 
 import { BookContext } from '../../../../contexts/BookContext';
 import { RequestContext } from '../../../../contexts/RequestContext';
 import { UserContext } from '../../../../contexts/UserContext';
 
 const AddRequestForm = () => {
+  const location= useLocation();
   const [username, setNewUsername] = useState('');
   const [newUser, setNewUser] = useState({
     username: '',
     fullname: '',
     classname: '',
   });
+
+  const bookR = location ? location?.state?.book._id : '';
   const [newRequest, setNewRequest] = useState({
-    book: '',
+    book: bookR,
     quantity: 0,
   });
 
@@ -46,7 +50,16 @@ const AddRequestForm = () => {
   const onHandleSubmit = async (event) => {
     event.preventDefault();
     if (!user) {
-      await addUser(newUser);
+      const { user } = await addUser(newUser);
+      const request = {
+        books: {
+          book: newRequest.book,
+          quantity: newRequest.quantity,
+        },
+        user: user._id,
+      }
+      const { success, message } = await addRequest(request);
+      setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     } else {
       const request = {
         books: {
@@ -59,7 +72,6 @@ const AddRequestForm = () => {
       setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     }
   }
-  
   const options = books.map((book) => ({name: book.name, author: book.author, _id: book._id}));
   useEffect(() => {
     getAllBooks();
@@ -84,10 +96,11 @@ const AddRequestForm = () => {
               className='w-full mb-4'
               required
               options={options}
+              defaultValue={location?.state?.book}
               getOptionLabel={(option) => `${option.name} - ${option.author}`}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               renderInput={(params) => <TextField {...params} label="Tên sách" />}
-              onChange={(event, option) => setNewRequest({...newRequest, book: option._id})}
+              onChange={(event, option) => setNewRequest({...newRequest, book: option?._id})}
             />
             <InputLabel shrink className='text-2xl'>
               Số lượng

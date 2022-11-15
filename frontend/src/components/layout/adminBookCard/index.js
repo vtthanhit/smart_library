@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import Breadcrumbs from '../Breadcrumbs';
 import { BookContext } from '../../../contexts/BookContext';
@@ -19,6 +19,7 @@ import ToastMessage from './components/ToastMessage';
 const AdminBookCard = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q");
+  const navigate= useNavigate();
 
   const {
     bookState: { count, books, booksLoading },
@@ -50,12 +51,6 @@ const AdminBookCard = () => {
   }
 
   const addNow = async (bookId) => {
-    const book = { books: {book: bookId, quantity: 1} }
-    const { success, message } = await addRequest(book);
-    if (success) {
-      getBooks(pagination.from, pagination.to);
-    }
-    setShowToast({ open: true, message, type: success ? 'success' : 'error' });
   }
 
   return (
@@ -97,7 +92,7 @@ const AdminBookCard = () => {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button onClick={() => addNow(book._id)} size="small">Cho thuê ngay</Button>
+                      <Button onClick={() => navigate('/admin/request/add_new', {state: {book}})} size="small">Cho thuê ngay</Button>
                     </CardActions>
                   </Card>
                 </Grid>

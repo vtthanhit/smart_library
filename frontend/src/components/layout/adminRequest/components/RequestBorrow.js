@@ -49,6 +49,8 @@ const RequestBorrow = () => {
     setOpenReturn(false);
   }
 
+  console.log(requests)
+
   return (
     <div className='bg-white bg-clip-padding shadow-my relative flex flex-col min-w-0 break-words border-border-color rounded-lg'>
       <h5 className='rounded-t-lg p-6 mb-0'>Danh sách yêu cầu mượn</h5>
@@ -62,8 +64,9 @@ const RequestBorrow = () => {
                 <th>Tác giả</th>
                 <th>Số lượng</th>
                 <th>Ngày mượn</th>
-                <th>Trạng thái</th>
+                <th>Hạn trả</th>
                 <th>Người mượn</th>
+                <th>Duyệt bởi</th>
                 <th>Hành động</th>
               </tr>
             </thead>
@@ -76,15 +79,12 @@ const RequestBorrow = () => {
                       <td>{request.books.book.name}</td>
                       <td>{request.books.book.author}</td>
                       <td>{request.books.quantity}</td>
-                      <td>{moment(request.updatedAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
-                      <td>{request.status === 'PENDING' ?
-                        <p className="text-lime-500">Chờ xác nhận</p> :
-                        request.status === 'ACCEPT' ?
-                        <p className="text-cyan-500">Đã xác nhận</p> :
-                        <p className="text-rose-500">Đã từ chối</p>
-                      }
+                      <td>{moment(request.createdAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
+                      <td>
+                        {moment(request.dueDate, "YYYY-MM-DD").format("DD-MM-YYYY")}
                       </td>
-                      <td>{request.user.fullname}</td>
+                      <td>{`${request.user?.username} - ${request.user?.fullname}`}</td>
+                      <td>{request.user_confirm.fullname}</td>
                       <td>
                         <Button onClick={() => {setOpenReturn(true); setRequestUpdate(request._id)}} size="small" color="info" variant="contained" startIcon={<KeyboardReturnIcon />}>
                           Trả

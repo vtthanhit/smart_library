@@ -57,7 +57,6 @@ const RequestReturn = () => {
                 <th>Ngày trả</th>
                 <th>Trạng thái</th>
                 <th>Người trả</th>
-                <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -78,14 +77,11 @@ const RequestReturn = () => {
                       }
                       </td>
                       <td>{request.user.fullname}</td>
-                      <td>
-                      </td>
                     </tr>
                   )
                 })
               }
             </tbody>
-
           </table>
 
           {/* pagination */}
