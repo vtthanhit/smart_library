@@ -10,7 +10,7 @@ const User = require("../models/User");
 router.get('/admin/return', verifyTokenAdmin, async (req, res) => {
   try {
     const requests = await Request.find({type: 'RETURN'})
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user', ['username', 'fullname'])
       .populate('user_confirm', ['username', 'fullname']);
 
@@ -25,7 +25,7 @@ router.get('/admin/return', verifyTokenAdmin, async (req, res) => {
 router.get('/admin/borrow', verifyTokenAdmin, async (req, res) => {
   try {
     const requests = await Request.find({type: 'BORROW'})
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user', ['username', 'fullname'])
       .populate('user_confirm', ['username', 'fullname']);
 
@@ -53,7 +53,7 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
     updatedRequest = await Request.findOneAndUpdate(
       requestUpdateCondition, updatedRequest, { new: true }
     )
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
@@ -81,12 +81,12 @@ router.put('/admin/:id', verifyTokenAdmin, async (req, res) => {
 router.put('/admin/return_book/:id', verifyTokenAdmin, async (req, res) => {
   const { type } = req.body;
   try {
-    let updatedRequest = { type };
+    let updatedRequest = { type, user_confirm: req.userId };
     const requestUpdateCondition = { _id: req.params.id };
     updatedRequest = await Request.findOneAndUpdate(
       requestUpdateCondition, updatedRequest, { new: true }
     )
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
@@ -111,6 +111,19 @@ router.delete('/admin/:id', verifyTokenAdmin, async (req, res) => {
 
     if (!deletedRequest)
       return res.status(404).json({ success: false, message: 'Data not found' });
+    return res.status(201).json({
+      success: true,
+      message: 'Book deleted successfully', request: deletedRequest,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Internal SERVER' });
+  }
+});
+
+router.delete('/admin', verifyTokenAdmin, async (req, res) => {
+  try {
+    await Request.remove();
+
     return res.status(201).json({
       success: true,
       message: 'Book deleted successfully', request: deletedRequest,
@@ -151,7 +164,7 @@ router.post('/borrow', verifyTokenAdmin, async (req, res) => {
 router.get('/borrow', verifyToken, async (req, res) => {
   try {
     const requests = await Request.find({ user: req.userId, type: 'BORROW' })
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
@@ -166,7 +179,7 @@ router.get('/borrow', verifyToken, async (req, res) => {
 router.get('/return', verifyToken, async (req, res) => {
   try {
     const requests = await Request.find({ user: req.userId, type: 'RETURN' })
-      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+      .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
       .populate('user_confirm', ['username', 'fullname'])
       .populate('user', ['username', 'fullname']);
 
@@ -207,7 +220,7 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
       };
       const requestChangeCondition = { user: req.userId, _id: req.params.id };
       updateType = await Request.findOneAndUpdate(requestChangeCondition, updateType, { new: true })
-        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
         .populate('user_confirm', ['username', 'fullname'])
         .populate('user', ['username', 'fullname']);
 
@@ -234,7 +247,7 @@ router.put('/borrow/:id', verifyToken, async (req, res) => {
       updatedRequest = await Request.findOneAndUpdate(
         requestUpdateCondition, updatedRequest, { new: true }
       )
-        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author']}})
+        .populate({path: 'books', populate: {path: 'book', model: 'books', select: ['name', 'author', 'sku']}})
         .populate('user_confirm', ['username', 'fullname'])
         .populate('user', ['username', 'fullname']);
 

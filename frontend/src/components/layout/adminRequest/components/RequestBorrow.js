@@ -58,8 +58,8 @@ const RequestBorrow = () => {
             <thead className='border-b-2 border-solid border-border-color'>
               <tr>
                 <th>STT</th>
+                <th>Mã sách</th>
                 <th>Tên sách</th>
-                <th>Tác giả</th>
                 <th>Số lượng</th>
                 <th>Ngày mượn</th>
                 <th>Hạn trả</th>
@@ -74,8 +74,8 @@ const RequestBorrow = () => {
                   return (
                     <tr key={request._id}>
                       <td>#{(index + 1 + pagination.from) }</td>
+                      <td>{request.books.book.sku}</td>
                       <td>{request.books.book.name}</td>
-                      <td>{request.books.book.author}</td>
                       <td>{request.books.quantity}</td>
                       <td>{moment(request.createdAt, "YYYY-MM-DD").format("DD-MM-YYYY")}</td>
                       <td>

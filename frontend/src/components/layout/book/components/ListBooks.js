@@ -61,7 +61,7 @@ const ListBooks = () => {
           <table className='mb-0'>
             <thead className='border-b-2 border-solid border-border-color'>
               <tr>
-                <th>STT</th>
+                <th>Mã sách</th>
                 <th>Hình ảnh</th>
                 <th>Tên sách</th>
                 <th>Tác giả</th>
@@ -76,7 +76,7 @@ const ListBooks = () => {
                 books.map((book, index) => {
                   return (
                     <tr key={book._id}>
-                      <td>#{(index + 1 + pagination.from) }</td>
+                      <td>{book.sku}</td>
                       <td>
                         {
                           book.image

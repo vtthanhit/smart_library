@@ -9,7 +9,17 @@ const Request = require('../models/Request');
 
 router.get('/', verifyTokenAdmin, async (req, res) => {
   try {
-    const users = await User.find({role: 'STUDENT'});
+    const users = await User.find({ role: 'STUDENT' });
+
+    return res.status(200).json({ success: true, users });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Internal SERVER!' });
+  }
+});
+
+router.get('/admin', verifyTokenAdmin, async (req, res) => {
+  try {
+    const users = await User.find({ role: 'ADMIN' });
 
     return res.status(200).json({ success: true, users });
   } catch (error) {

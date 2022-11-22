@@ -58,6 +58,7 @@ const UpdateBookForm = () => {
       if (updateBookValue.description) updateFormData.append('description', updateBookValue.description);
       if (updateBookValue.quantity) updateFormData.append('quantity', updateBookValue.quantity);
       if (updateBookValue.category) updateFormData.append('category', updateBookValue.category);
+      if (updateBookValue.sku) updateFormData.append('sku', updateBookValue.sku);
 
       const { success, message } = await updateBook(updateFormData, updateBookValue._id);
       setShowToast({ open: true, message, type: success ? 'success' : 'error' });
@@ -129,7 +130,14 @@ const UpdateBookForm = () => {
                 Hình ảnh:
               </InputLabel>
               <div className='flex'>
-                <img src={`data:image/png;base64,${covertImageBase64(book.image.data.data)}`} width="150" className='rounded-lg shadow-my-2 mr-6'/>
+                <img 
+                  src={book.image 
+                    ? `data:image/png;base64,${covertImageBase64(book.image.data.data)}`
+                    : `https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png`
+                  } 
+                  width="150" 
+                  className='rounded-lg shadow-my-2 mr-6'
+                  />
                 <label className='w-full'>
                   <input type="file" className="block w-full text-sm text-slate-500
                     file:mr-4 file:py-2 file:px-4
@@ -158,6 +166,22 @@ const UpdateBookForm = () => {
               className='mb-4'
               label="Tên tác giả"
               defaultValue={book.author}
+              onChange={onChangeUpdateBook}
+            />
+
+            <InputLabel shrink className='text-2xl'>
+              Mã sách:
+            </InputLabel>
+            <TextField
+              name='sku'
+              variant="outlined"
+              placeholder='Nhập mã sách'
+              size="small"
+              required
+              fullWidth
+              className='mb-4'
+              label="Mã sách"
+              defaultValue={book.sku}
               onChange={onChangeUpdateBook}
             />
 
