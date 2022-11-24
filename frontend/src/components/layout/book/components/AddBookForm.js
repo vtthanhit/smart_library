@@ -24,6 +24,7 @@ const AddBookForm = () => {
     quantity: '',
     category: '',
     image: '',
+    sku: '',
   });
 
   const options = categories.map((category) => ({name: category.name, _id: category._id}))
@@ -48,6 +49,7 @@ const AddBookForm = () => {
     addBookFormData.append('description', newBook.description)
     addBookFormData.append('quantity', newBook.quantity)
     addBookFormData.append('category', newBook.category)
+    addBookFormData.append('sku', newBook.sku)
 
     const { success, message } = await addBook(addBookFormData);
     setShowToast({ open: true, message, type: success ? 'success' : 'error' });
@@ -65,6 +67,7 @@ const AddBookForm = () => {
       quantity: '',
       category: '',
       image: '',
+      sku: '',
     });
   }
 
@@ -156,6 +159,21 @@ const AddBookForm = () => {
               fullWidth
               className='mb-4'
               label="Tên tác giả"
+              onChange={onChangeNewBook}
+            />
+
+            <InputLabel shrink className='text-2xl'>
+              Mã sách:
+            </InputLabel>
+            <TextField
+              name='sku'
+              variant="outlined"
+              placeholder='Nhập mã sách'
+              size="small"
+              required
+              fullWidth
+              className='mb-4'
+              label="Mã sách"
               onChange={onChangeNewBook}
             />
 

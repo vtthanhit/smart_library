@@ -10,6 +10,7 @@ import {
 	UPDATE_BOOK,
 	ALL_BOOK,
 	FIND_BOOK,
+	FIND_BOOK_SKU,
 } from './constants';
 import { bookReducer } from '../reducers/bookReducer';
 
@@ -93,6 +94,18 @@ const BookContextProvider = ({ children }) => {
 		}
 	}
 
+	// Find book
+	const findBookBySKU = async (sku) => {
+		try {
+			const response = await axios.get(`${apiUrl}/book/sku`, { params: { sku } });
+			if (response.data.success) {
+				dispatch({ type: FIND_BOOK_SKU, payload: response.data.book })
+			}
+		} catch (error) {
+			dispatch({ type: BOOKS_LOADED_FAIL })
+		}
+	}
+
 	// Delete book
 	const deleteBook = async bookId => {
 		try {
@@ -134,6 +147,7 @@ const BookContextProvider = ({ children }) => {
 		setShowToast,
 		pagination,
 		setPagination,
+		findBookBySKU,
 	}
 
   return (

@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
-  const { name, author, description, quantity, category } = req.body;
+  const { name, author, description, quantity, category, sku } = req.body;
 
   if (!name)
     return res
@@ -32,6 +32,12 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
       .status(400)
       .json({ success: false, message: "Danh mục là bắt buộc!" });
 
+  const checkBook = await Book.find({ sku });
+  if (checkBook.length > 0)
+    return res
+      .status(400)
+      .json({ success: false, message: "Mã sách đã tồn tại!" });
+
   try {
     let newBook = new Book({
       name,
@@ -39,6 +45,7 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
       description,
       quantity,
       category,
+      sku,
     });
     if (req.file) {
       newBook = new Book({
@@ -47,6 +54,7 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
         description,
         quantity,
         category,
+        sku,
         image: {
           data: fs.readFileSync("uploads/" + req.file.filename),
           contentType: "image/png",
@@ -60,7 +68,17 @@ router.post("/", upload.single("image"), verifyTokenAdmin, async (req, res) => {
       book: newBook,
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal SERVER" });
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/sku", async (req, res) => {
+  try {
+    const book = await Book.findOne({ sku: req.query.sku }).populate("category", ["name"]);
+
+    return res.status(200).json({ success: true, book });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
@@ -103,7 +121,7 @@ router.get("/category/:categoryId", async (req, res) => {
 });
 
 router.put("/:id", upload.single("image"), verifyTokenAdmin, async (req, res) => {
-  const { name, author, description, quantity, category } = req.body;
+  const { name, author, description, quantity, category, sku } = req.body;
 
   try {
     let updatedBook = {
@@ -112,6 +130,7 @@ router.put("/:id", upload.single("image"), verifyTokenAdmin, async (req, res) =>
       description,
       quantity,
       category,
+      sku,
     };
     if (req.file) {
       updatedBook = {
@@ -120,6 +139,7 @@ router.put("/:id", upload.single("image"), verifyTokenAdmin, async (req, res) =>
         description,
         quantity,
         category,
+        sku,
         image: {
           data: fs.readFileSync("uploads/" + req.file.filename),
           contentType: "image/png",
@@ -127,6 +147,16 @@ router.put("/:id", upload.single("image"), verifyTokenAdmin, async (req, res) =>
       }
     }
     const bookUpdateCondition = { _id: req.params.id };
+
+    const book = await Book.find(bookUpdateCondition);
+    if (sku !== book.sku) {
+      const checkBook = await Book.find({ sku });
+      if (checkBook.length > 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Mã sách đã tồn tại!" });
+      }
+    }
 
     updatedBook = await Book.findOneAndUpdate(
       bookUpdateCondition,

@@ -6,6 +6,7 @@ import {
   UPDATE_BOOK,
   ALL_BOOK,
   FIND_BOOK,
+  FIND_BOOK_SKU,
 } from '../contexts/constants';
 
 export const bookReducer = (state, action) => {
@@ -46,6 +47,13 @@ export const bookReducer = (state, action) => {
       }
 
     case FIND_BOOK:
+      return {
+        ...state,
+        book: payload,
+        booksLoading: false,
+      }
+
+    case FIND_BOOK_SKU:
       return {
         ...state,
         book: payload,

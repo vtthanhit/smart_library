@@ -25,6 +25,7 @@ import AdminRequestBorrow from './components/layout/adminRequest/AdminRequestBor
 import Profile from './components/layout/auth';
 import AdminBookCard from './components/layout/adminBookCard';
 import AdminAddRequest from './components/layout/adminRequest/AdminAddRequest';
+import Admins from './components/layout/user/Admin';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
             />
             <Route path='/admin/category' element={<CategoryContextProvider><Categories /></CategoryContextProvider>} />
             <Route path='/admin/user' element={<UserContextProvider><Users /></UserContextProvider>} />
+            <Route path='/admin/admin' element={<UserContextProvider><Admins /></UserContextProvider>} />
             <Route path='/admin/book'>
               <Route path='add' element={
                 <CategoryContextProvider>

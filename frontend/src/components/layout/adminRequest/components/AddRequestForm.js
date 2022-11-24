@@ -15,15 +15,19 @@ const AddRequestForm = () => {
     classname: '',
   });
 
-  const bookR = location ? location?.state?.book._id : '';
+  const bookR = location ? location?.state?.book : '';
+  console.log(bookR)
+  const sku = bookR ? bookR.sku : '';
   const [newRequest, setNewRequest] = useState({
-    book: bookR,
+    book: bookR?._id,
     quantity: 0,
+    sku,
   });
 
   const {
-    bookState: { books },
+    bookState: { books, book },
     getAllBooks,
+    findBookBySKU,
   } = useContext(BookContext);
 
   const { setShowToast, addRequest } = useContext(RequestContext);
@@ -72,11 +76,12 @@ const AddRequestForm = () => {
       setShowToast({ open: true, message, type: success ? 'success' : 'error' });
     }
   }
-  const options = books.map((book) => ({name: book.name, author: book.author, _id: book._id}));
+
   useEffect(() => {
     getAllBooks();
     findUser(username);
-  }, [username]);
+    findBookBySKU(newRequest.sku)
+  }, [username, newRequest.sku]);
 
   return (
     <div className='w-full bg-white p-5 shadow-my'>
@@ -87,20 +92,33 @@ const AddRequestForm = () => {
         <Grid container>
           <Grid item xs={6} md={6} className='pr-4'>
             <InputLabel shrink className='text-2xl'>
+              Mã sách
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              name='sku'
+              variant="outlined"
+              className='mb-4'
+              placeholder='Nhập mã sách'
+              fullWidth={true}
+              size="small"
+              defaultValue={ bookR?.sku }
+              required
+              onChange={onChangeRequest}
+            />
+            <InputLabel shrink className='text-2xl'>
               Tên sách
             </InputLabel>
-            <Autocomplete
-              disablePortal
+            <TextField
+              id="outlined-basic"
               name='book'
-              size='small'
-              className='w-full mb-4'
-              required
-              options={options}
-              defaultValue={location?.state?.book}
-              getOptionLabel={(option) => `${option.name} - ${option.author}`}
-              isOptionEqualToValue={(option, value) => option._id === value._id}
-              renderInput={(params) => <TextField {...params} label="Tên sách" />}
-              onChange={(event, option) => setNewRequest({...newRequest, book: option?._id})}
+              variant="outlined"
+              className='mb-4'
+              placeholder='Tên sách'
+              fullWidth={true}
+              size="small"
+              value={ `${book?.name} - ${book?.category?.name}` }
+              disabled
             />
             <InputLabel shrink className='text-2xl'>
               Số lượng

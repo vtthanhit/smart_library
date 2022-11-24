@@ -44,7 +44,7 @@ export const menuData = [
     ]
   },
   {
-    title: 'Quản lý bạn đọc',
+    title: 'Quản lý user',
     path: '#',
     icon: <PersonOutlineIcon fontSize='small' />,
     iconOpened: <KeyboardArrowDownIcon fontSize='small' />,
@@ -53,6 +53,11 @@ export const menuData = [
       {
         title: 'Danh sách bạn đọc',
         path: '/admin/user',
+        icon: <PeopleAltIcon fontSize='small' />,
+      },
+      {
+        title: 'Danh sách quản trị',
+        path: '/admin/admin',
         icon: <PeopleAltIcon fontSize='small' />,
       },
     ]

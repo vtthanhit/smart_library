@@ -74,9 +74,24 @@ const UserContextProvider = ({ children }) => {
 			dispatch({ type: USERS_LOADED_FAIL })
 		}
 	}
+		// Get all admins
+		const getAdmins = async (from, to) => {
+			try {
+				const response = await axios.get(`${apiUrl}/user/admin`);
+				if (response.data.success) {
+					const data = response.data.users
+					const count = data.length;
+					const users = data.slice(from, to);
+					dispatch({ type: USERS_LOADED_SUCCESS, payload: { count, users } })
+				}
+			} catch (error) {
+				dispatch({ type: USERS_LOADED_FAIL })
+			}
+		}
 
 	// Add user
 	const addUser = async newUser => {
+		console.log(newUser)
 		try {
 			const response = await axios.post(`${apiUrl}/user`, newUser)
 			if (response.data.success) {
@@ -125,6 +140,7 @@ const UserContextProvider = ({ children }) => {
 		findUser,
 		getAllUsers,
     addUser,
+		getAdmins,
 		showToast,
 		setShowToast,
 		deleteUser,
