@@ -6,6 +6,7 @@ import {
   UPDATE_USER,
   ALL_USER,
   FIND_USER,
+  USER_LOT,
 } from '../contexts/constants';
 
 export const userReducer = (state, action) => {
@@ -59,6 +60,14 @@ export const userReducer = (state, action) => {
       return {
         ...state,
         users: newUsers,
+      }
+
+    case USER_LOT:
+      return {
+        ...state,
+        users: payload.users,
+        count: payload.count,
+        usersLoading: false,
       }
 
     default:
