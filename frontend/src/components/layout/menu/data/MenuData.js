@@ -12,12 +12,34 @@ import ImportContactsOutlinedIcon from '@mui/icons-material/ImportContactsOutlin
 import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import HomeIcon from '@mui/icons-material/Home';
+import StarIcon from '@mui/icons-material/Star';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
 export const menuData = [
   {
+    title: 'Trang chủ',
+    path: '/admin/home',
+    icon: <HomeIcon fontSize='small' />,
+  },
+  {
     title: 'Thống kê',
-    path: '/admin',
+    path: '#',
     icon: <DashboardIcon fontSize='small' />,
+    iconOpened: <KeyboardArrowDownIcon fontSize='small' />,
+    iconClosed: <KeyboardArrowRightIcon fontSize='small' />,
+    subMenu: [
+      {
+        title: 'Mượn nhiều nhất',
+        path: '/admin',
+        icon: <StarIcon fontSize='small' />,
+      },
+      {
+        title: 'Sinh vien muon nhieu',
+        path: '/admin/book-student',
+        icon: <AutoStoriesIcon fontSize='small' />,
+      },
+    ]
   },
   {
     title: 'Quản lý yêu cầu',

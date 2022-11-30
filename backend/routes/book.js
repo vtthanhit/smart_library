@@ -5,6 +5,7 @@ const fs = require("fs");
 const { verifyTokenAdmin } = require("../middleware/auth");
 
 const Book = require("../models/Book");
+const Request = require("../models/Request");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -115,6 +116,34 @@ router.get("/category/:categoryId", async (req, res) => {
     );
 
     return res.status(200).json({ success: true, books });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/borrow/lot", verifyTokenAdmin, async (req, res) => {
+  try {
+    const books = await Request.aggregate([
+      // { $match: { "type": "BORROW" } },
+      {
+        $group: {
+          _id: "$books.book",
+          totalAmount: {$sum: "$books.quantity"},
+        }
+      },
+      {
+        $lookup: {
+          from: "books",
+          localField: "_id",
+          foreignField: "_id",
+          as: "book_requests",
+        }
+      },
+      { $sort: { totalAmount: -1 } }
+    ])
+
+    return res.status(200).json({ success: true, books });
+
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

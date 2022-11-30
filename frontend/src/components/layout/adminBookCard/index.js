@@ -50,9 +50,6 @@ const AdminBookCard = () => {
     return <Loading />
   }
 
-  const addNow = async (bookId) => {
-  }
-
   return (
     <div className='pb-0 w-full flex items-stretch flex-auto flex-col justify-between'>
       <div className='py-6 flex-grow xxl:px-2 xxl:max-w-1400 xs:px-7 w-full mr-auto ml-auto'>
@@ -62,7 +59,7 @@ const AdminBookCard = () => {
         </div>
         <Grid container spacing={2}>
           {
-            books.map((book) => {
+            books?.map((book) => {
               return (
                 <Grid item sm={6} xs={12} md={3} key={book._id}>
                   <Card className='h-full'>

@@ -11,6 +11,7 @@ import {
 	ALL_BOOK,
 	FIND_BOOK,
 	FIND_BOOK_SKU,
+	BOOK_LOT,
 } from './constants';
 import { bookReducer } from '../reducers/bookReducer';
 
@@ -135,6 +136,20 @@ const BookContextProvider = ({ children }) => {
 		}
 	}
 
+	const lotBooks = async (query, from, to) => {
+		try {
+			const response = await axios.get(`${apiUrl}/book/borrow/lot?q=${query}`);
+			if (response.data.success) {
+				const data = response.data.books;
+				const count = data.length;
+				const books = data.slice(from, to);
+				dispatch({ type: BOOK_LOT, payload: { count, books } })
+			}
+		} catch (error) {
+			dispatch({ type: BOOKS_LOADED_FAIL })
+		}
+	}
+
   const bookContextData = {
     bookState,
     addBook,
@@ -148,6 +163,7 @@ const BookContextProvider = ({ children }) => {
 		pagination,
 		setPagination,
 		findBookBySKU,
+		lotBooks,
 	}
 
   return (

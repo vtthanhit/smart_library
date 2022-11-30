@@ -7,6 +7,7 @@ import {
   ALL_BOOK,
   FIND_BOOK,
   FIND_BOOK_SKU,
+  BOOK_LOT,
 } from '../contexts/constants';
 
 export const bookReducer = (state, action) => {
@@ -67,6 +68,14 @@ export const bookReducer = (state, action) => {
       return {
         ...state,
         books: newBooks
+      }
+
+    case BOOK_LOT: 
+      return {
+        ...state,
+        books: payload.books,
+        count: payload.count,
+        booksLoading: false,
       }
 
     default:

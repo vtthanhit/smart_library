@@ -1,7 +1,7 @@
 import { createContext, useReducer, useState } from 'react';
 import axios from 'axios';
 
-import { apiUrl, PAGY_PAGE_SIZE } from './constants';
+import { apiUrl, PAGY_PAGE_SIZE, USER_LOT } from './constants';
 import {
 	ADD_USER,
 	USERS_LOADED_SUCCESS,
@@ -56,6 +56,20 @@ const UserContextProvider = ({ children }) => {
 			if (response.data.success) {
 				const users = response.data.users
 				dispatch({ type: ALL_USER, payload: { users } })
+			}
+		} catch (error) {
+			dispatch({ type: USERS_LOADED_FAIL })
+		}
+	}
+
+	const lotUsers = async (query, from, to) => {
+		try {
+			const response = await axios.get(`${apiUrl}/user/borrow/lot?q=${query}`);
+			if (response.data.success) {
+				const data = response.data.users;
+				const count = data.length;
+				const users = data.slice(from, to);
+				dispatch({ type: USER_LOT, payload: { count, users } })
 			}
 		} catch (error) {
 			dispatch({ type: USERS_LOADED_FAIL })
@@ -147,6 +161,7 @@ const UserContextProvider = ({ children }) => {
 		updateUser,
 		pagination,
 		setPagination,
+		lotUsers,
 	}
 
   return (

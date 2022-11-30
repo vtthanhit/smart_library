@@ -38,6 +38,33 @@ router.get('/:username', verifyTokenAdmin, async (req, res) => {
   }
 });
 
+router.get("/borrow/lot", verifyTokenAdmin, async (req, res) => {
+  try {
+    const users = await Request.aggregate([
+      {
+        $group: {
+          _id: "$user",
+          totalAmount: {$sum: "$books.quantity"},
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user_requests",
+        }
+      },
+      { $sort: { totalAmount: -1 } }
+    ])
+
+    return res.status(200).json({ success: true, users });
+
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 router.post('/', verifyTokenAdmin, async (req, res) => {
   const { username, fullname, classname, email, role } = req.body;
   const defaultPassword = DEFAULT_USER_PASSWORD;

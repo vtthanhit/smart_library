@@ -56,9 +56,9 @@ const BookCard = () => {
         </div>
         <Grid container spacing={2}>
           {
-            books.map((book) => {
+            books.map((book, index) => {
               return (
-                <Grid item sm={6} xs={12} md={3} key={book._id}>
+                <Grid item sm={6} xs={12} md={3} key={book.index}>
                   <Card className='h-full'>
                     <CardMedia
                       component="img"

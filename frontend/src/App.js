@@ -26,6 +26,8 @@ import Profile from './components/layout/auth';
 import AdminBookCard from './components/layout/adminBookCard';
 import AdminAddRequest from './components/layout/adminRequest/AdminAddRequest';
 import Admins from './components/layout/user/Admin';
+import Dashboard from './components/layout/dashboard/Dashboard';
+import UserDashboard from './components/layout/dashboard/UserDashboard';
 
 function App() {
   return (
@@ -72,6 +74,18 @@ function App() {
         <Route element={<AdminPrivateRoute />} >
           <Route element={<Admin/>}>
             <Route path='/admin' element={
+              <BookContextProvider>
+                  <Dashboard/>
+              </BookContextProvider>
+            }
+            />
+            <Route path='/admin/book-student' element={
+              <UserContextProvider>
+                  <UserDashboard/>
+              </UserContextProvider>
+            }
+            />
+            <Route path='/admin/home' element={
               <CategoryContextProvider>
                 <BookContextProvider>
                   <RequestContextProvider>
